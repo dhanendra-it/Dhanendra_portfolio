@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: rgb(207, 217, 223);
+  --color-secondary: rgb(195, 207, 226);
+  --color-heading: rgb(30, 41, 59);
+  --color-dark-primary: #000;
+  --color-dark-Secondary: #1b1b1b;
+  --color-dark-third: rgb(30, 42, 58);
+  --color-dark-four: #1a1a1a;
+}
+::selection {
+  background: rgba(9, 9, 9, 0.628);
+  color: white;
+}
