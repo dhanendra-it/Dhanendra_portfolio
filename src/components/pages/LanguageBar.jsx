@@ -4,7 +4,7 @@ import ReduxLogo from "../../assets/redux.png";
 import ExpressLogo from "../../assets/express1.png";
 import CssLogo from "../../assets/css.png";
 import JsLogo from "../../assets/js.png";
-import HtmlLogo from "../../assets/Html.png";
+import HtmlLogo from "../../assets/html.png";
 import MongoLogo from "../../assets/mongo.png";
 
 const LanguageBar = () => {
