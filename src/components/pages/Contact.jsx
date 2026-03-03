@@ -52,7 +52,7 @@ const Contact = () => {
               <div className="flex gap-6 pt-4">
 
                 <a
-                  href="#"
+                  href="https://github.com/dhanendra-it"
                   target="_blank"
                   rel="noreferrer"
                   className="text-gray-700 dark:text-white hover:scale-110 transition"
@@ -61,7 +61,7 @@ const Contact = () => {
                 </a>
 
                 <a
-                  href="#"
+                  href="https://linkedin.com/in/dhanendra-it"
                   target="_blank"
                   rel="noreferrer"
                   className="text-gray-700 dark:text-white hover:scale-110 transition"

@@ -52,7 +52,7 @@ const About = () => {
 
             {/* Contact Button */}
             <a
-              href="/contact"
+              href="https://wa.me/918827811548"
               className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:bg-gray-300 transition"
             >
               Contact Me

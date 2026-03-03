@@ -57,10 +57,10 @@ const Header = ({ toggleDarkMode, darkMode }) => {
 
           {/* Social (Desktop only) */}
           <div className="hidden lg:flex gap-2 items-center">
-            <a href="https://linkedin.com" target="_blank">
+            <a href="https://linkedin.com/in/dhanendra-it" target="_blank">
               <TbBrandLinkedinFilled className="w-8 h-8 hover:scale-110 transition" />
             </a>
-            <a href="https://github.com" target="_blank">
+            <a href="https://github.com/dhanendra-it" target="_blank">
               <FaSquareGithub className="w-8 h-8 hover:scale-110 transition" />
             </a>
           </div>
