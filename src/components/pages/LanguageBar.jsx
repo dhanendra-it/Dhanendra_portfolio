@@ -1,3 +1,4 @@
+import React from "react";
 import ReactLogo from "../../assets/react-logo.png";
 import NodeLogo from "../../assets/node.png";
 import ReduxLogo from "../../assets/redux.png";
@@ -7,40 +8,83 @@ import JsLogo from "../../assets/js.png";
 import HtmlLogo from "../../assets/html.png";
 import MongoLogo from "../../assets/mongo.png";
 
-const LanguageBar = () => {
-  const Logos = [
-    { name: ReactLogo, width: "w-12 md:w-14" },
-    { name: NodeLogo, width: "w-20 md:w-24" },
-    { name: ReduxLogo, width: "w-10 md:w-12" },
-    { name: ExpressLogo, width: "w-16 md:w-20" },
-    { name: CssLogo, width: "w-8 md:w-10" },
-    { name: JsLogo, width: "w-8 md:w-10" },
-    { name: HtmlLogo, width: "w-8 md:w-10" },
-    { name: MongoLogo, width: "w-24 md:w-32" },
-  ];
+const logos = [
+  ReactLogo,
+  NodeLogo,
+  ReduxLogo,
+  ExpressLogo,
+  CssLogo,
+  JsLogo,
+  HtmlLogo,
+  MongoLogo,
+];
 
+export function LanguageBar() {
   return (
-    <div className="grid place-items-center px-4">
-      <div className="bg-[#fffffff8] dark:bg-[#0f2d53] 
-                      py-6 md:py-8 
-                      px-6 md:px-10 
-                      flex flex-wrap 
-                      justify-center 
-                      items-center 
-                      gap-6 md:gap-10 
-                      rounded-xl">
+    <div className="w-full py-10 bg-white dark:bg-[#0b1120] border-y border-gray-200 dark:border-gray-800">
+      
+      <div className="relative max-w-6xl mx-auto overflow-hidden">
 
-        {Logos.map((elem, index) => (
-          <img
-            src={elem.name}
-            alt="tech-logo"
-            className={`transition-all duration-300 ease-in-out hover:scale-110 ${elem.width}`}
-            key={index}
-          />
-        ))}
+        {/* fade */}
+        <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-white dark:from-[#0b1120] to-transparent z-10" />
+        <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white dark:from-[#0b1120] to-transparent z-10" />
+
+        {/* TRACK */}
+        <div className="flex w-max animate-scroll">
+          {[...logos, ...logos].map((logo, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-center px-8 md:px-12"
+            >
+              <img
+                src={logo}
+                alt="tech"
+                className="h-9 md:h-11 object-contain opacity-70 hover:opacity-100 hover:scale-105 transition duration-300"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default LanguageBar;
+const skills = [
+  "Web Applications",
+  "Mobile Apps",
+  "Desktop Apps",
+  "Cloud Systems",
+  "Offline Software",
+  "Online Platforms",
+  "Static Websites",
+  "Full Stack Solutions",
+  "Responsive UI",
+  "REST APIs",
+  "Real-time Systems",
+];
+
+export function SkillsSlider() {
+  return (
+    <div className="w-full py-6 bg-white dark:bg-[#0b1120] border-b border-gray-200 dark:border-gray-800">
+      
+      <div className="relative max-w-6xl mx-auto overflow-hidden">
+
+        {/* fade */}
+        <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-white dark:from-[#0b1120] to-transparent z-10" />
+        <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white dark:from-[#0b1120] to-transparent z-10" />
+
+        {/* TRACK */}
+        <div className="flex w-max animate-scroll-reverse">
+          {[...skills, ...skills].map((item, index) => (
+            <div
+              key={index}
+              className="px-6 md:px-8 text-sm md:text-base text-gray-600 dark:text-gray-400 whitespace-nowrap"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

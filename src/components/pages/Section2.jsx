@@ -1,11 +1,12 @@
 import React from 'react'
-import LanguageBar from './LanguageBar'
+import { LanguageBar , SkillsSlider } from './LanguageBar'
 import AboutSection from './AboutSection'
 
 const Section2 = () => {
   return (
-    <div className='bg-[#c3cfe2] dark:bg-dark-third mt-10 py-15'>
+    <div className='bg-[#c3cfe2] dark:bg-dark-third mt-10 pb-15'>
       <LanguageBar/>
+      <SkillsSlider/>
       <AboutSection/>
     </div>
   )

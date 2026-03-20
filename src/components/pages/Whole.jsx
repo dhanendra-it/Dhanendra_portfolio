@@ -6,13 +6,14 @@ import Section4 from "./Section4";
 import Footer from "./Footer";
 import Section5 from "./Section5";
 import  CertificateSlider from "./CertificateSlider";
+import Testimonials from "./Testimonial";
 
 const Whole = () => {
   return (
     <div className="dark:bg-dark-primary transition-colors duration-500 ease-in-out">
  
       {/* section one */}
-      <div className="pt-23 pb-10">
+      <div className="pt-23 ">
         <Section1 />
       </div>
       
@@ -27,6 +28,8 @@ const Whole = () => {
 
       {/* certificate section */}
       < CertificateSlider/>
+
+      <Testimonials/>
 
       {/* Section 4 */}
       <Section4 />

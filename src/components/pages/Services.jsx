@@ -1,92 +1,88 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 const services = [
   {
-    title: "UI / UX Design",
-    desc: "Modern, user-focused interfaces designed with clean aesthetics and smooth user journeys. Optimized for usability and engagement.",
-  },
-  {
-    title: "Frontend Development",
-    desc: "Responsive and interactive websites built with React, Tailwind CSS, and modern JavaScript for high performance and scalability.",
-  },
-  {
     title: "Full Stack Development",
-    desc: "Complete web applications using React, Node.js, Express, and MongoDB with secure authentication and API integrations.",
+    desc: "High-performance web applications with secure backend, scalable architecture and modern UI for real-world business needs.",
+    tech: "React • Node.js • Express • MongoDB",
   },
   {
-    title: "Admin Panel Systems",
-    desc: "Powerful admin dashboards with analytics, role management, secure login systems, and complete data control.",
+    title: "ERP Software",
+    desc: "Complete business management systems including billing, inventory, staff tracking and advanced analytics dashboard.",
+    tech: "MERN • Role-based Auth • Reports",
   },
   {
-    title: "Portfolio Websites",
-    desc: "High-end personal portfolio websites with animations, modern UI, and interactive sections to stand out professionally.",
+    title: "Mobile App Development",
+    desc: "Fast, smooth and modern mobile apps with real-time data, notifications and excellent user experience.",
+    tech: "React Native • Firebase • APIs",
   },
   {
-    title: "E-Commerce Websites",
-    desc: "Scalable online stores with cart system, payment integration, product management, and optimized performance.",
+    title: "Desktop Applications",
+    desc: "Powerful desktop software that works offline and online for billing systems, tools and internal operations.",
+    tech: "Electron.js • Node • SQLite",
   },
   {
-    title: "Business Websites",
-    desc: "Professional business websites that build brand trust, generate leads, and showcase services effectively.",
+    title: "Cloud & Deployment",
+    desc: "Deploy scalable apps with zero downtime, high security and optimized cloud infrastructure.",
+    tech: "AWS • Vercel • Docker",
+  },
+  {
+    title: "Offline Sync Systems",
+    desc: "Applications that work without internet and automatically sync data when online, perfect for shops & field work.",
+    tech: "IndexedDB • Sync APIs • Service Workers",
   },
 ];
 
 const Services = () => {
-  const sliderRef = useRef(null);
-
-  useEffect(() => {
-    const slider = sliderRef.current;
-    let scrollAmount = 0;
-
-    const slide = () => {
-      if (slider) {     
-        scrollAmount += 1;
-        if (scrollAmount >= slider.scrollWidth / 2) {
-          scrollAmount = 0;
-        }
-        slider.scrollTo({
-          left: scrollAmount,
-          behavior: "auto",
-        });
-      }
-    };
-
-    const interval = setInterval(slide, 15);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <section className="py-20 bg-gray-100 dark:bg-black transition-colors duration-500 overflow-hidden h-screen ">
-      <div className="max-w-7xl mx-auto px-6 pt-20">
-        <h2 className="text-4xl font-bold text-center mb-14 text-gray-800 dark:text-white">
-          Services
+    <section className="min-h-screen py-28 bg-gradient-to-b from-[#f8fafc] to-[#e2e8f0] dark:from-[#020617] dark:to-[#0f172a]">
+
+      <div className="max-w-7xl mx-auto px-6">
+
+        {/* 🔥 HEADING */}
+        <h2 className="text-5xl font-bold text-center mb-20 
+        bg-gradient-to-r from-[#1e293b] via-[#64748b] to-[#94a3b8]
+        dark:from-white dark:via-gray-300 dark:to-gray-500
+        bg-clip-text text-transparent">
+          My Services
         </h2>
 
-        <div
-          ref={sliderRef}
-          className="flex gap-8 overflow-x-hidden scroll-smooth"
-        >
-          {[...services, ...services].map((service, index) => (
+        {/* 🔥 GRID */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+          {services.map((s, i) => (
             <div
-              key={index}
-              className="min-w-[320px] md:min-w-87.5 lg:min-w-95
-              bg-white dark:bg-zinc-900
-              border border-gray-200 dark:border-zinc-700
-              rounded-2xl p-8 shadow-lg
-              hover:shadow-2xl
-              transition-all duration-500
+              key={i}
+              className="group rounded-3xl p-8 
+              bg-white/80 dark:bg-[#0f172a]
+              backdrop-blur-xl
+              border border-gray-200 dark:border-gray-700
+              shadow-md hover:shadow-2xl
+              transition duration-300
               hover:-translate-y-2"
             >
-              <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-                {service.title}
+              {/* Title */}
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
+                {s.title}
               </h3>
 
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                {service.desc}
+              {/* Desc */}
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                {s.desc}
               </p>
+
+              {/* Tech */}
+              <p className="text-sm font-medium text-indigo-500">
+                ⚙ {s.tech}
+              </p>
+
+              {/* Hover Line */}
+              <div className="mt-6 h-[2px] w-0 bg-indigo-500 transition-all duration-300 group-hover:w-full"></div>
             </div>
           ))}
+
         </div>
+
       </div>
     </section>
   );
