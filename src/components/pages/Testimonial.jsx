@@ -9,7 +9,7 @@ const testimonials = [
     role: "owner of Unisarthi",
     image: FP,
     review:
-      "I worked with Anurag to make my website. I am speechless by looking at his work ethic and dedication. Working with him was the best decision I made.",
+      "I worked with Dhanendra to make my website. I am speechless by looking at his work ethic and dedication. Working with him was the best decision I made.",
   },
   {
     name: "Prashant Thakre",
