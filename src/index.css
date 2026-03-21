@@ -91,3 +91,73 @@
   width: max-content;
   animation: scrollX 25s linear infinite;
 }
+
+/* 🔥 Single curved shining line */
+/* 🔥 VISIBLE CURVED SHINE LINE */
+/* 🌞 LIGHT MODE SHINE */
+.nav-shine {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 30%;
+  height: 100%;
+  pointer-events: none;
+
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.15) 60%,
+    transparent 100%
+  );
+
+  transform: skewX(-25deg);
+  filter: blur(4px);
+
+  animation: navShineAdvanced 6s ease-in-out infinite;
+}
+
+/* 🌙 DARK MODE SHINE */
+.dark .nav-shine {
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(61, 57, 57, 0.5) 40%,
+    rgba(36, 35, 35, 0.7) 50%,
+    rgba(173, 170, 170, 0.2) 60%,
+    transparent 100%
+  );
+}
+
+/* 🔥 ADVANCED MOVEMENT */
+@keyframes navShineAdvanced {
+  0% {
+    left: -60%;
+  }
+
+  /* move till middle */
+  30% {
+    left: 40%;
+  }
+
+  /* 🔥 pause in middle */
+  40% {
+    left: 40%;
+  }
+
+  /* go forward */
+  60% {
+    left: 120%;
+  }
+
+  /* 🔥 small pause at end */
+  70% {
+    left: 120%;
+  }
+
+  /* 🔥 come back reverse */
+  100% {
+    left: -60%;
+  }
+}

@@ -33,7 +33,6 @@ const slides = [
       "Student-focused platform built using PHP and frontend technologies.",
     technologies: ["HTML", "CSS", "JavaScript", "PHP"],
   },
-  
 ];
 
 export default function Section5() {
@@ -67,7 +66,7 @@ export default function Section5() {
 
   return (
     <section
-      className="pt-20 bg-gray-100 dark:bg-gray-800 overflow-x-hidden"
+      className="pt-20 bg-gray-100 dark:bg-gray-800 overflow-x-hidden "
       id="project"
     >
       {/* HEADING */}
@@ -76,7 +75,7 @@ export default function Section5() {
       </h1>
 
       {/* SLIDER */}
-      <div className="relative mt-10 md:mt-16 h-[420px] sm:h-[480px] md:h-[600px] flex items-center justify-center overflow-hidden">
+      <div className="relative mt-10 md:mt-16 h-[450px] sm:h-[480px] md:h-[600px] flex items-center justify-center overflow-hidden pb-5">
         {slides.map((slide, index) => {
           const position = getPosition(index);
 

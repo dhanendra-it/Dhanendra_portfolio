@@ -27,23 +27,34 @@ const Header = ({ toggleDarkMode, darkMode }) => {
 
   return (
     <>
+      {/* NAVBAR */}
       <nav
-        className={`fixed top-0 left-0 h-20 w-full z-50 flex items-center justify-between px-6 lg:px-40 backdrop-blur-xl bg-[#cfd9df25] dark:bg-[#1111112e] transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-20 w-full z-50 flex items-center justify-between px-6 lg:px-40
+        backdrop-blur-xl bg-[#cfd9df25] dark:bg-[#1111112e]
+        border-b border-white/10
+        overflow-hidden
+        transition-all duration-300 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Logo */}
-        <div className="w-20 h-12 rounded-lg shadow-lg p-2 bg-gray-700 dark:bg-dark-primary">
+
+        {/* 🔥 SHINING LINE */}
+        <div className="nav-shine"></div>
+
+        {/* LOGO */}
+        <div className="relative z-10 w-20 h-12 rounded-lg shadow-lg p-2 bg-gray-700 dark:bg-dark-primary">
           <img src={logo} alt="logo" />
         </div>
 
-        {/* Desktop Links */}
-        <NavLinks />
+        {/* DESKTOP LINKS */}
+        <div className="relative z-10">
+          <NavLinks />
+        </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-6 dark:text-white">
+        {/* RIGHT SECTION */}
+        <div className="flex items-center gap-6 dark:text-white relative z-10">
 
-          {/* Dark Mode */}
+          {/* DARK MODE */}
           <button
             onClick={toggleDarkMode}
             className="transition-all hover:scale-125"
@@ -55,7 +66,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
             )}
           </button>
 
-          {/* Social (Desktop only) */}
+          {/* SOCIAL */}
           <div className="hidden lg:flex gap-2 items-center">
             <a href="https://linkedin.com/in/dhanendra-it" target="_blank">
               <TbBrandLinkedinFilled className="w-8 h-8 hover:scale-110 transition" />
@@ -65,7 +76,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
             </a>
           </div>
 
-          {/* Hamburger (Mobile only) */}
+          {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden text-3xl"
@@ -75,21 +86,29 @@ const Header = ({ toggleDarkMode, darkMode }) => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       <div
-        className={`fixed top-0 right-0 w-64  dark:bg-black shadow-lg z-40 transform transition-transform duration-300 text-center py-5 ${
+        className={`fixed top-0 right-0 w-64 h-full dark:bg-black bg-white shadow-lg z-40 transform transition-transform duration-300 text-center py-5 ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col mt-24 gap-8 px-8 text-lg dark:text-white">
-          <a href="/" onClick={() => setMobileOpen(false) } className="bg-[#e5e1e1b2]">Home</a>
-          <a href="/About" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2]">About</a>
-          <a href="/Services" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2]">Services</a>
-          <a href="/Contact" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2]">Contact</a>
+          <a href="/" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2] p-2 rounded">
+            Home
+          </a>
+          <a href="/About" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2] p-2 rounded">
+            About
+          </a>
+          <a href="/Services" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2] p-2 rounded">
+            Services
+          </a>
+          <a href="/Contact" onClick={() => setMobileOpen(false)} className="bg-[#e5e1e1b2] p-2 rounded">
+            Contact
+          </a>
         </div>
       </div>
 
-      {/* Overlay */}
+      {/* OVERLAY */}
       {mobileOpen && (
         <div
           onClick={() => setMobileOpen(false)}
