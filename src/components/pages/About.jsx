@@ -37,7 +37,7 @@ const About = () => {
 
           {/* Text */}
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-            I’m Dhanendra Choudhary, a passionate Full Stack Developer and
+            I’m Dhanen Choudhary, a passionate Full Stack Developer and
             Software Engineer currently pursuing BTech in Information
             Technology. Over time, I have evolved from building web applications
             to developing complete digital solutions including ERP systems,
