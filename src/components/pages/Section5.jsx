@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Portfolio from "../../assets/portfolio.png";
-import Nick from "../../assets/nick.png";
-import Unisarthi from "../../assets/unisarthi.png";
-import Notes from "../../assets/notes-app.png";
-import ERP from "../../assets/bajajErp.webp";
+import Portfolio from "../../assets/mockup/portfolio.webp";
+import Nick from "../../assets/mockup/nick.webp";
+import Unisarthi from "../../assets/mockup/unisarthi.webp";
+import ERP from "../../assets/mockup/bajajErp.webp";
 
 const slides = [
   {

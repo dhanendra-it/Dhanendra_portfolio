@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
-import C1 from "../../assets/sololearn.jpg";
-import C2 from "../../assets/skillup.jpg";
-import C3 from "../../assets/forage.jpg";
-import C4 from "../../assets/IBM.jpg";
-import C5 from "../../assets/Prashant.png";
+import C4 from "../../assets/certificate/sololearn.webp";
+import C1  from "../../assets/certificate/skillup.webp";
+import C3 from "../../assets/certificate/forage.webp";
+import C5 from "../../assets/certificate/IBM.webp";
+import C6 from "../../assets/certificate/Prashant.webp";
+import C2 from "../../assets/certificate/free_code.webp";
+
 
 export default function CertificateSlider() {
   const [current, setCurrent] = useState(0);
@@ -18,6 +20,7 @@ export default function CertificateSlider() {
     { image: C3 },
     { image: C4 },
     { image: C5 },
+    { image: C6 },
   ];
 
   const nextSlide = () => {

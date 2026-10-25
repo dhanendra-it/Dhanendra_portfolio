@@ -1,12 +1,12 @@
 import React from "react";
-import ReactLogo from "../../assets/react-logo.png";
-import NodeLogo from "../../assets/node.png";
-import ReduxLogo from "../../assets/redux.png";
-import ExpressLogo from "../../assets/express1.png";
-import CssLogo from "../../assets/css.png";
-import JsLogo from "../../assets/js.png";
-import HtmlLogo from "../../assets/html.png";
-import MongoLogo from "../../assets/mongo.png";
+import ReactLogo from "../../assets/designs/react-logo.webp";
+import NodeLogo from "../../assets/designs/node.webp";
+import ReduxLogo from "../../assets/designs/redux.webp";
+import ExpressLogo from "../../assets/designs/express1.webp";
+import CssLogo from "../../assets/designs/css.webp";
+import JsLogo from "../../assets/designs/js.webp";
+import HtmlLogo from "../../assets/designs/html.webp";
+import MongoLogo from "../../assets/designs/mongo.webp";
 
 const logos = [
   ReactLogo,
