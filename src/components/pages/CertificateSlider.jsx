@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
 import C4 from "../../assets/certificate/sololearn.webp";
+import C7 from "../../assets/certificate/ExcelR.webp";
 import C1  from "../../assets/certificate/skillup.webp";
 import C3 from "../../assets/certificate/forage.webp";
 import C5 from "../../assets/certificate/IBM.webp";
@@ -15,6 +16,7 @@ export default function CertificateSlider() {
 
   // ✅ Only image inside object
   const certificates = [
+    { image: C7 },
     { image: C1 },
     { image: C2 },
     { image: C3 },
