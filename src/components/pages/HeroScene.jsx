@@ -4,7 +4,7 @@ import { Environment, Lightformer, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import photo from "../../assets/dhruv-neww.png";
 
-const RING_ROT = new THREE.Euler(-1.0, 0, 0.5);
+const RING_ROT = new THREE.Euler(-0.78, 0, 0.9);
 const INTRO_DELAY = 2.4; // seconds — waits for the gear loader to finish
 
 /**
@@ -169,12 +169,15 @@ function Scene({ reduced }) {
     } else {
       cx = -W * 0.13;
       k = H * 0.155;
-      // Slightly smaller and lifted to match the approved editorial portrait framing.
-      topY = H * 0.5 - H * 0.07;
-      const target = -H * 0.37; // ring's lowest edge; lifts the portrait's lower crop
+      // Keep the cutout smaller and higher, leaving more breathing room around the face.
+      topY = H * 0.5 - H * 0.05;
+      bottomY = -H * 0.27;
+
+      // The chrome ribbon sits lower and on a stronger diagonal, wrapping the waist
+      // rather than cutting across the chest.
+      const target = -H * 0.45;
       ringY = 0;
       for (let n = 0; n < 3; n++) ringY += target - (ringLowestNdc(geometry, camera, k, ringY) * H) / 2;
-      bottomY = target + H * 0.01;
     }
 
     const visH = topY - bottomY;
