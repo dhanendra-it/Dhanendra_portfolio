@@ -1,0 +1,165 @@
+.gear-loader {
+  --gear-drop-duration: 1.18s;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(116, 68, 35, .17), transparent 34%),
+    radial-gradient(ellipse at 50% 100%, rgba(186, 106, 42, .1), transparent 45%),
+    #090909;
+  color: #d8c6ae;
+  pointer-events: all;
+}
+
+.gear-loader__grain {
+  position: absolute;
+  inset: 0;
+  opacity: .12;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+}
+
+.gear-loader__anchor {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: calc(43vh - 92px);
+  transform: translateX(-50%);
+  transform-origin: top;
+  animation: gear-rope-drop var(--gear-drop-duration) cubic-bezier(.18,.76,.25,1) both;
+}
+
+.gear-loader__rope {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: repeating-linear-gradient(180deg, #b18b61 0 3px, #4b3929 3px 5px, #d2ad7c 5px 6px);
+  box-shadow: 0 0 8px rgba(211, 143, 72, .24);
+}
+
+.gear-loader__hook {
+  position: absolute;
+  bottom: -9px;
+  left: -6px;
+  width: 14px;
+  height: 17px;
+  border: 3px solid #b99a75;
+  border-top: 0;
+  border-radius: 0 0 9px 9px;
+  filter: drop-shadow(0 0 5px rgba(221, 150, 74, .3));
+}
+
+.gear-loader__drop {
+  position: absolute;
+  top: calc(43vh - 102px);
+  left: 50%;
+  width: min(220px, 48vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -115vh);
+  animation: gear-drop var(--gear-drop-duration) cubic-bezier(.18,.76,.25,1) forwards;
+}
+
+.gear-loader__gear {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .72)) drop-shadow(0 0 18px rgba(180, 108, 48, .16));
+  animation: gear-spin 5.5s linear 1.18s infinite;
+  transform-origin: 50% 50%;
+}
+
+.gear-loader__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gear-loader__caption {
+  position: absolute;
+  left: 50%;
+  bottom: 8.5%;
+  transform: translateX(-50%);
+  color: rgba(218, 195, 164, .64);
+  font: 500 10px/1.2 system-ui, sans-serif;
+  letter-spacing: .34em;
+  white-space: nowrap;
+  animation: gear-caption-in .7s ease 1.15s both;
+}
+
+.gear-loader--retract .gear-loader__drop {
+  animation: gear-retract .88s cubic-bezier(.7,0,.84,.18) forwards;
+}
+
+.gear-loader--retract .gear-loader__gear {
+  animation: gear-spin-away .88s ease-in forwards;
+}
+
+.gear-loader--retract .gear-loader__anchor {
+  animation: gear-rope-retract .88s ease-in forwards;
+}
+
+.gear-loader--retract .gear-loader__caption {
+  animation: gear-caption-out .25s ease forwards;
+}
+
+@keyframes gear-drop {
+  0% { transform: translate(-50%, -115vh) rotate(-95deg); }
+  72% { transform: translate(-50%, 14px) rotate(9deg); }
+  86% { transform: translate(-50%, -7px) rotate(-4deg); }
+  100% { transform: translate(-50%, 0) rotate(0); }
+}
+
+@keyframes gear-rope-drop {
+  from { transform: translateX(-50%) scaleY(0); }
+  to { transform: translateX(-50%) scaleY(1); }
+}
+
+@keyframes gear-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gear-retract {
+  from { transform: translate(-50%, 0) rotate(0); }
+  to { transform: translate(-50%, -120vh) rotate(170deg); }
+}
+
+@keyframes gear-spin-away {
+  to { transform: rotate(95deg) scale(.88); opacity: .35; }
+}
+
+@keyframes gear-rope-retract {
+  to { transform: translateX(-50%) scaleY(0); }
+}
+
+@keyframes gear-caption-in {
+  from { opacity: 0; letter-spacing: .48em; }
+  to { opacity: 1; letter-spacing: .34em; }
+}
+
+@keyframes gear-caption-out {
+  to { opacity: 0; }
+}
+
+@media (max-width: 640px) {
+  .gear-loader__drop { width: min(168px, 44vw); top: calc(42vh - 78px); }
+  .gear-loader__anchor { height: calc(42vh - 68px); }
+  .gear-loader__caption { bottom: 12%; font-size: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gear-loader__drop,
+  .gear-loader__anchor,
+  .gear-loader__gear,
+  .gear-loader__caption {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .gear-loader--retract .gear-loader__drop {
+    transform: translate(-50%, -120vh);
+    opacity: 0;
+  }
+}
