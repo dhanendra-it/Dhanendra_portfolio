@@ -193,7 +193,7 @@ function Scene({ reduced }) {
       px: cx - ((bb.left + bb.right) / 2 - 0.5) * planeW,
       py: topY + bb.top * planeH - planeH / 2,
       // alpha fade (texture v, 0 = bottom of image) over the last part of the body on desktop
-      fade: [-1, -0.5],
+      fade: mobile ? [-1, -0.5] : [1 - bb.bottom, 1 - bb.bottom + bbH * 0.035],
     };
   }, [tex, mobile, W, H, geometry, camera]);
 
@@ -203,7 +203,15 @@ function Scene({ reduced }) {
       .replace("#include <common>", "#include <common>\nuniform vec2 uFade;")
       .replace(
         "#include <map_fragment>",
-        "#include <map_fragment>\ndiffuseColor.a *= smoothstep(uFade.x, uFade.y, vMapUv.y);"
+        "#include <map_fragment>\n" +
+          "diffuseColor.a *= smoothstep(uFade.x, uFade.y, vMapUv.y);\n" +
+          // Keep the lower torso inside a soft oval aperture; leave the head/shoulders natural.
+          "float bodyX = (vMapUv.x - 0.5) / 0.47;\n" +
+          "float bodyY = (vMapUv.y - 0.30) / 0.33;\n" +
+          "float bodyEllipse = bodyX * bodyX + bodyY * bodyY;\n" +
+          "float bodyInside = 1.0 - smoothstep(0.92, 1.04, bodyEllipse);\n" +
+          "float lowerBody = 1.0 - smoothstep(0.48, 0.62, vMapUv.y);\n" +
+          "diffuseColor.a *= mix(1.0, bodyInside, lowerBody);"
       );
   }, []);
 
