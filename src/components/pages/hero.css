@@ -66,8 +66,8 @@
   color: #e9e4da;
 }
 .hero__letter--c {
-  top: 76vh;
-  left: 38vw;
+  top: 58vh; /* was 76vh: most of the C sat below the screen */
+  left: 45vw; /* was 38vw: its left edge sat on the dark panel (40vw), where black-on-black hid it */
   color: #121212;
 }
 .dark .hero__letter--c {
