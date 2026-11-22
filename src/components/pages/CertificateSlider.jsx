@@ -37,7 +37,7 @@ export default function CertificateSlider() {
 
   return (
     <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-500 p-6">
+      <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-500 p-6">
         
         {/* Dark Mode Toggle */}
         <button

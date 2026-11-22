@@ -5,12 +5,15 @@ import { FaSquareGithub } from "react-icons/fa6";
 import { IoSunny } from "react-icons/io5";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
+import { useLocation } from "react-router-dom";
 import NavLinks from "./NavLinks";
 
 const Header = ({ toggleDarkMode, darkMode }) => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // the home hero has its own logo + section nav, so here we only keep the utility cluster
+  const isHome = useLocation().pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,30 +32,34 @@ const Header = ({ toggleDarkMode, darkMode }) => {
     <>
       {/* NAVBAR */}
       <nav
-        className={`fixed top-0 left-0 h-20 w-full z-50 flex items-center justify-between px-6 lg:px-40
-        backdrop-blur-xl bg-[#cfd9df25] dark:bg-[#1111112e]
-        border-b border-white/10
-        overflow-hidden
-        transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-20 w-full z-50 flex items-center overflow-hidden transition-all duration-300 ${
+          isHome
+            ? "justify-end px-6 lg:px-10 mix-blend-difference text-white pointer-events-none"
+            : "justify-between px-6 lg:px-40 backdrop-blur-xl bg-[#cfd9df25] dark:bg-[#1111112e] border-b border-white/10"
+        } ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
 
         {/* 🔥 SHINING LINE */}
-        <div className="nav-shine"></div>
+        {!isHome && <div className="nav-shine"></div>}
 
         {/* LOGO */}
-        <div className="relative z-10 w-20 h-12 rounded-lg shadow-lg p-2 bg-gray-700 dark:bg-dark-primary">
-          <img src={logo} alt="logo" />
-        </div>
+        {!isHome && (
+          <div className="relative z-10 w-20 h-12 rounded-lg shadow-lg p-2 bg-gray-700 dark:bg-dark-primary">
+            <img src={logo} alt="logo" />
+          </div>
+        )}
 
         {/* DESKTOP LINKS */}
-        <div className="relative z-10">
-          <NavLinks />
-        </div>
+        {!isHome && (
+          <div className="relative z-10">
+            <NavLinks />
+          </div>
+        )}
 
         {/* RIGHT SECTION */}
-        <div className="flex items-center gap-6 dark:text-white relative z-10">
+        <div className={`flex items-center gap-6 relative z-10 ${isHome ? "text-white pointer-events-auto" : "dark:text-white"}`}>
 
           {/* DARK MODE */}
           <button
