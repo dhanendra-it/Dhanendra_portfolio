@@ -4,7 +4,7 @@ import { Environment, Lightformer, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import photo from "../../assets/dhruv-neww.png";
 
-const RING_ROT = new THREE.Euler(-1.08, 0, 0.62);
+const RING_ROT = new THREE.Euler(-0.96, 0, 0.9);
 const INTRO_DELAY = 2.4; // seconds — waits for the gear loader to finish
 
 /**
@@ -105,7 +105,7 @@ function alphaBounds(img) {
 function ringLowestNdc(geo, camera, scale, posY) {
   const pos = geo.attributes.position;
   const q = new THREE.Quaternion().setFromEuler(RING_ROT);
-  const m = new THREE.Matrix4().compose(new THREE.Vector3(0, 0, 0), q, new THREE.Vector3(scale, scale, scale));
+  const m = new THREE.Matrix4().compose(new THREE.Vector3(0, 0, 0), q, new THREE.Vector3(scale * 1.2, scale * 0.84, scale * 0.92));
   m.setPosition(0, posY, 0);
   const spin = new THREE.Quaternion();
   const axis = new THREE.Vector3(0, 0, 1);
@@ -172,7 +172,8 @@ function Scene({ reduced }) {
       // Keep the head near the same top anchor while showing more of the torso.
       topY = H * 0.5 - H * 0.05;
       const target = -H * 0.43;
-      bottomY = target + H * 0.015;
+      // Crop the visible portrait higher: no lower torso should spill below the chrome loop.
+      bottomY = -H * 0.25;
 
       // A narrower, more diagonal chrome loop sits around the lower torso.
       ringY = 0;
@@ -192,7 +193,7 @@ function Scene({ reduced }) {
       px: cx - ((bb.left + bb.right) / 2 - 0.5) * planeW,
       py: topY + bb.top * planeH - planeH / 2,
       // alpha fade (texture v, 0 = bottom of image) over the last part of the body on desktop
-      fade: mobile ? [-1, -0.5] : [1 - bb.bottom, 1 - bb.bottom + bbH * 0.14],
+      fade: [-1, -0.5],
     };
   }, [tex, mobile, W, H, geometry, camera]);
 
@@ -220,7 +221,12 @@ function Scene({ reduced }) {
 
     const ring = ringRef.current;
     if (ring) {
-      ring.scale.setScalar(Math.max(L.k * p, 0.0001));
+      if (mobile) {
+        ring.scale.setScalar(Math.max(L.k * p, 0.0001));
+      } else {
+        // A wider, flatter orbit reads as an elongated diagonal ribbon, not a collar.
+        ring.scale.set(L.k * 1.2 * p, L.k * 0.84 * p, L.k * 0.92 * p);
+      }
       ring.position.x = L.cx;
       ring.position.y = L.ringY + (reduced ? 0 : Math.sin(t * 0.8) * L.visH * 0.008);
       ring.rotation.y = THREE.MathUtils.damp(ring.rotation.y, px * 0.3, 3, dt);
@@ -243,7 +249,7 @@ function Scene({ reduced }) {
       {/* transparent plane drawn after the opaque ring: depth-test decides what is in front/behind */}
       <mesh ref={photoRef} position={[L.px, L.py, 0]}>
         <planeGeometry args={[L.planeW, L.planeH]} />
-        <meshBasicMaterial map={tex} transparent toneMapped={false} onBeforeCompile={patchFade} />
+        <meshBasicMaterial map={tex} transparent alphaTest={0.025} depthWrite toneMapped={false} onBeforeCompile={patchFade} />
       </mesh>
 
       {/* the ring passes through the photo plane, so depth decides front/back — no layer hacks */}
