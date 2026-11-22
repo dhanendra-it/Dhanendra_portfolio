@@ -208,10 +208,10 @@ function Scene({ reduced }) {
           // Fade only the lower torso into a broad oval aperture. The image plane
           // continues below it, so the alpha edge is curved rather than a flat rectangle.
           "float bodyX = (vMapUv.x - 0.5) / 0.52;\n" +
-          "float bodyY = (vMapUv.y - 0.66) / 0.52;\n" +
+          "float bodyY = (vMapUv.y - 0.34) / 0.34;\n" +
           "float bodyEllipse = bodyX * bodyX + bodyY * bodyY;\n" +
-          "float bodyInside = 1.0 - smoothstep(0.94, 1.06, bodyEllipse);\n" +
-          "float lowerBody = 1.0 - smoothstep(0.68, 0.82, vMapUv.y);\n" +
+          "float bodyInside = 1.0 - smoothstep(0.94, 1.08, bodyEllipse);\n" +
+          "float lowerBody = 1.0 - smoothstep(0.48, 0.62, vMapUv.y);\n" +
           "diffuseColor.a *= mix(1.0, bodyInside, lowerBody);"
       );
   }, []);
