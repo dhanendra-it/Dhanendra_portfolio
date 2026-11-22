@@ -49,6 +49,47 @@ const Tools = [
   name: "VS Code",
   logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
 }
+,
+{
+  name: "DeepSeek",
+  logo: "https://cdn.simpleicons.org/deepseek",
+},
+{
+  name: "Antigravity",
+  logo: "https://cdn.simpleicons.org/google",
+},
+{
+  name: "Claude Code",
+  logo: "https://cdn.simpleicons.org/claude",
+},
+{
+  name: "Codex",
+  logo: "https://cdn.simpleicons.org/openai",
+},
+{
+  name: "Git",
+  logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+},
+{
+  name: "GitHub",
+  logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+},
+{
+  name: "MariaDB",
+  logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg",
+},
+{
+  name: "Docker",
+  logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+},
+{
+  name: "Gemini",
+  logo: "https://cdn.simpleicons.org/googlegemini",
+},
+{
+  name: "Android Studio",
+  logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg",
+}
 ];
 
   return (
