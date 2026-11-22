@@ -1,10 +1,9 @@
 import React from "react";
 import Hero from "./Hero";
-import Section2 from "./Section2";
+import Projects from "./Projects";
 import Section3 from "./Section3";
 import Section4 from "./Section4";
 import Footer from "./Footer";
-import Section5 from "./Section5";
 import  CertificateSlider from "./CertificateSlider";
 import Testimonials from "./Testimonial";
 
@@ -15,11 +14,8 @@ const Whole = () => {
       {/* section one */}
       <Hero />
       
-      {/* section 2 */}
-      <Section2 />
-
-      {/* section projects */}
-      <Section5/>
+      {/* projects — pinned horizontal scroll */}
+      <Projects />
 
       {/* Section 3 */}
       <Section3 />
