@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { certificates } from "./certificatesData";
 import "./certificates.css";
 
@@ -20,6 +20,9 @@ const Certificates = () => {
     animate: { y: seen ? 0 : "110%" },
     transition: { duration: 1.1, ease: EASE, delay },
   });
+
+  const prev = () => setActive((i) => (i === 0 ? total - 1 : i - 1));
+  const next = () => setActive((i) => (i === total - 1 ? 0 : i + 1));
 
   // warm the cache so switching certificates never flashes
   useEffect(() => {
@@ -81,12 +84,34 @@ const Certificates = () => {
                 transition={{ duration: 0.45, ease: EASE }}
               />
             </AnimatePresence>
+
+            {/* mobile navigation arrows overlaid on frame */}
+            <div className="certs__frame-arrows">
+              <button
+                type="button"
+                onClick={prev}
+                aria-label="Previous certificate"
+                className="certs__arrow-btn"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label="Next certificate"
+                className="certs__arrow-btn"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
           </div>
 
           <div className="certs__meta">
-            <span>
-              {pad(active + 1)} / {pad(total)} · {c.issuer}
-            </span>
+            <div className="certs__meta-issuer">
+              <span>
+                {pad(active + 1)} / {pad(total)} · {c.issuer}
+              </span>
+            </div>
             <span className="certs__links">
               <a href={c.image} target="_blank" rel="noreferrer">
                 View full <ArrowUpRight aria-hidden="true" />

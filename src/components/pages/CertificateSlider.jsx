@@ -55,37 +55,39 @@ export default function CertificateSlider() {
           My Certificates
         </h2>
 
-        <div className="relative w-full max-w-3xl">
+        <div className="relative w-full max-w-3xl px-2 sm:px-0">
           <AnimatePresence mode="wait">
             <motion.div
-  key={current}
-  initial={{ opacity: 0, x: 100 }}
-  animate={{ opacity: 1, x: 0 }}
-  exit={{ opacity: 0, x: -100 }}
-  transition={{ duration: 0.5 }}
-  className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 flex items-center justify-center"
->
-  <img
-    src={certificates[current].image}
-    alt="certificate"
-    className="max-h-125 w-full object-contain"
-  />
-</motion.div>
+              key={current}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.5 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-3 sm:p-4 flex items-center justify-center"
+            >
+              <img
+                src={certificates[current].image}
+                alt="certificate"
+                className="max-h-96 sm:max-h-125 w-full object-contain"
+              />
+            </motion.div>
           </AnimatePresence>
 
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute top-1/2 -left-5 transform -translate-y-1/2 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
+            aria-label="Previous"
+            className="absolute top-1/2 left-2 sm:-left-5 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 p-2.5 sm:p-3 rounded-full shadow-lg"
           >
-            <ChevronLeft />
+            <ChevronLeft size={20} />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute top-1/2 -right-5 transform -translate-y-1/2 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
+            aria-label="Next"
+            className="absolute top-1/2 right-2 sm:-right-5 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 p-2.5 sm:p-3 rounded-full shadow-lg"
           >
-            <ChevronRight />
+            <ChevronRight size={20} />
           </button>
         </div>
 

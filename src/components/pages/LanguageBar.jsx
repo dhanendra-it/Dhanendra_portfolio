@@ -21,25 +21,25 @@ const logos = [
 
 export function LanguageBar() {
   return (
-    <div className="w-full py-10 bg-white dark:bg-[#0b1120] border-y border-gray-200 dark:border-gray-800">
+    <div className="w-full py-6 sm:py-10 bg-white dark:bg-[#0b1120] border-y border-gray-200 dark:border-gray-800">
       
       <div className="relative max-w-6xl mx-auto overflow-hidden">
 
         {/* fade */}
-        <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-white dark:from-[#0b1120] to-transparent z-10" />
-        <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white dark:from-[#0b1120] to-transparent z-10" />
+        <div className="absolute left-0 top-0 h-full w-8 sm:w-16 bg-gradient-to-r from-white dark:from-[#0b1120] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 h-full w-8 sm:w-16 bg-gradient-to-l from-white dark:from-[#0b1120] to-transparent z-10 pointer-events-none" />
 
         {/* TRACK */}
         <div className="flex w-max animate-scroll">
           {[...logos, ...logos].map((logo, index) => (
             <div
               key={index}
-              className="flex items-center justify-center px-8 md:px-12"
+              className="flex items-center justify-center px-4 sm:px-8 md:px-12"
             >
               <img
                 src={logo}
                 alt="tech"
-                className="h-9 md:h-11 object-contain opacity-70 hover:opacity-100 hover:scale-105 transition duration-300"
+                className="h-7 sm:h-9 md:h-11 object-contain opacity-70 hover:opacity-100 hover:scale-105 transition duration-300"
               />
             </div>
           ))}
@@ -65,20 +65,20 @@ const skills = [
 
 export function SkillsSlider() {
   return (
-    <div className="w-full py-6 bg-white dark:bg-[#0b1120] border-b border-gray-200 dark:border-gray-800">
+    <div className="w-full py-4 sm:py-6 bg-white dark:bg-[#0b1120] border-b border-gray-200 dark:border-gray-800">
       
       <div className="relative max-w-6xl mx-auto overflow-hidden">
 
         {/* fade */}
-        <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-white dark:from-[#0b1120] to-transparent z-10" />
-        <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white dark:from-[#0b1120] to-transparent z-10" />
+        <div className="absolute left-0 top-0 h-full w-8 sm:w-16 bg-gradient-to-r from-white dark:from-[#0b1120] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 h-full w-8 sm:w-16 bg-gradient-to-l from-white dark:from-[#0b1120] to-transparent z-10 pointer-events-none" />
 
         {/* TRACK */}
         <div className="flex w-max animate-scroll-reverse">
           {[...skills, ...skills].map((item, index) => (
             <div
               key={index}
-              className="px-6 md:px-8 text-sm md:text-base text-gray-600 dark:text-gray-400 whitespace-nowrap"
+              className="px-4 sm:px-6 md:px-8 text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 whitespace-nowrap"
             >
               {item}
             </div>

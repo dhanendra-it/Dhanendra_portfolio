@@ -147,6 +147,7 @@
   top: 12vh;
 }
 .certs__frame {
+  position: relative;
   display: grid;
   place-items: center;
   height: min(62vh, 560px);
@@ -163,6 +164,27 @@
   object-fit: contain;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
   user-select: none;
+}
+.certs__frame-arrows {
+  display: none;
+}
+.certs__arrow-btn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s, background-color 0.2s;
+}
+.certs__arrow-btn:active {
+  transform: scale(0.92);
 }
 .certs__meta {
   display: flex;
@@ -204,11 +226,11 @@
 /* ───────── tablet / mobile: preview first, list below ───────── */
 @media (max-width: 1023px) {
   .certs {
-    padding: 14vw 1.5rem 16vw;
+    padding: 14vw 1.25rem 16vw;
   }
   .certs__grid {
     grid-template-columns: 1fr;
-    gap: 2.2rem;
+    gap: 2rem;
   }
   .certs__left {
     display: contents;
@@ -219,7 +241,7 @@
   }
   .certs__h2 {
     order: 1;
-    font-size: clamp(3.4rem, 16vw, 6.5rem);
+    font-size: clamp(2.6rem, 13vw, 5.5rem);
   }
   .certs__right {
     order: 2;
@@ -231,18 +253,41 @@
   }
   .certs__frame {
     height: auto;
-    aspect-ratio: 4 / 3;
-    padding: 4vw;
+    aspect-ratio: 16 / 11;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .certs__frame-arrows {
+    position: absolute;
+    inset: auto 0.75rem 0.75rem auto;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 5;
   }
   .certs__row {
-    grid-template-columns: 2.2rem minmax(0, 1fr);
-    padding: 1.4rem 0;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    padding: 1.1rem 0;
+  }
+  .certs__t b {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
   }
   .certs__d {
     display: none;
   }
   .certs__meta {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .certs__links {
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .certs {
+    padding: 18vw 1rem 18vw;
   }
 }

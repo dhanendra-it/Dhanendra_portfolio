@@ -39,23 +39,23 @@ const AboutSection = () => {
   };
 
   return (
-    <div className="flex justify-center items-center mt-20 px-6 md:px-16 perspective-[1200px]">
+    <div className="flex justify-center items-center mt-12 sm:mt-20 px-4 sm:px-6 md:px-16 perspective-[1200px]">
       
       {/* WRAPPER */}
       <div
         onMouseMove={handleMove}
         onMouseLeave={resetTilt}
-        className="relative w-full md:w-[75%] lg:w-[65%] transition-transform duration-200 ease-out"
+        className="relative w-full md:w-[85%] lg:w-[65%] transition-transform duration-200 ease-out"
         style={{
-          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)`,
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.01)`,
         }}
       >
 
         {/* OUTER GLOW */}
-        <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-30 blur-2xl animate-pulse" />
+        <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-30 blur-2xl animate-pulse" />
 
         {/* CARD */}
-        <div className="relative bg-white/70 dark:bg-[#0f172a]/80 backdrop-blur-2xl border border-white/20 dark:border-white/10 p-6 md:p-10 rounded-3xl shadow-[0_20px_80px_rgba(0,0,0,0.3)] overflow-hidden">
+        <div className="relative bg-white/70 dark:bg-[#0f172a]/80 backdrop-blur-2xl border border-white/20 dark:border-white/10 p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-[0_20px_80px_rgba(0,0,0,0.3)] overflow-hidden">
 
           {/* SHINE EFFECT */}
           <div
@@ -66,38 +66,38 @@ const AboutSection = () => {
           />
 
           {/* INNER SOFT GLOW */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
 
           {/* CONTENT */}
-          <div className="grid md:grid-cols-2 gap-10 relative z-10">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10 relative z-10">
 
             {/* LEFT */}
             <div>
-              <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
                 What I Can Build For You
               </h2>
 
-              <p className="text-gray-600 dark:text-gray-300 mt-4 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-3 sm:mt-4 leading-relaxed">
                 I create scalable, high-performance applications with modern UI,
                 strong backend systems, and seamless user experience across web,
                 mobile, and desktop platforms.
               </p>
 
-              <div className="grid grid-cols-2 gap-8 mt-10">
+              <div className="grid grid-cols-2 gap-4 sm:gap-8 mt-6 sm:mt-10">
                 <div>
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
+                  <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
                     10+
                   </h3>
-                  <p className="text-gray-500 dark:text-gray-300">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">
                     Projects Completed
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
+                  <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
                     2+
                   </h3>
-                  <p className="text-gray-500 dark:text-gray-300">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">
                     Years Experience
                   </p>
                 </div>
@@ -105,20 +105,20 @@ const AboutSection = () => {
             </div>
 
             {/* RIGHT */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {Projects.map((elem, index) => (
                 <div
                   key={index}
-                  className="group flex items-center justify-between p-3 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition duration-300"
+                  className="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition duration-300"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     
                     {/* IMAGE */}
-                    <div className="relative">
+                    <div className="relative flex-shrink-0">
                       <img
                         src={elem.path}
                         alt={elem.name}
-                        className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl shadow-lg transition group-hover:scale-110"
+                        className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-cover rounded-xl shadow-lg transition group-hover:scale-105"
                       />
 
                       {/* IMAGE GLOW */}
@@ -127,18 +127,18 @@ const AboutSection = () => {
 
                     {/* TEXT */}
                     <div>
-                      <h3 className="text-gray-900 text-lg md:text-xl font-semibold dark:text-white group-hover:text-blue-500 transition">
+                      <h3 className="text-gray-900 text-base sm:text-lg md:text-xl font-semibold dark:text-white group-hover:text-blue-500 transition">
                         {elem.name}
                       </h3>
 
-                      <p className="text-gray-500 dark:text-gray-300 text-sm">
+                      <p className="text-gray-500 dark:text-gray-300 text-xs sm:text-sm">
                         {elem.projects}
                       </p>
                     </div>
                   </div>
 
                   {/* ARROW */}
-                  <span className="text-lg md:text-xl transform group-hover:translate-x-2 group-hover:text-blue-500 transition text-gray-400">
+                  <span className="text-base sm:text-xl transform group-hover:translate-x-2 group-hover:text-blue-500 transition text-gray-400">
                     →
                   </span>
                 </div>

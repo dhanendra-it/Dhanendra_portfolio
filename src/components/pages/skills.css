@@ -209,37 +209,72 @@
 /* ───────── tablet / mobile ───────── */
 @media (max-width: 1023px) {
   .skills {
-    padding: 14vw 1.5rem 16vw;
+    padding: 14vw 1.25rem 16vw;
   }
   .skills__grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
   .skills__side {
     position: static;
   }
   .skills__h2 {
-    font-size: clamp(3.4rem, 16vw, 6.5rem);
+    font-size: clamp(2.6rem, 13vw, 5.5rem);
   }
   .skills__lead {
-    margin-top: 1.4rem;
+    margin-top: 1.2rem;
     max-width: none;
+    font-size: 0.95rem;
   }
   .skills__stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem 1.2rem;
     margin-top: 2rem;
     padding-top: 1.4rem;
-    gap: 2rem;
   }
   .skills__stats dt {
-    font-size: 2.6rem;
+    font-size: clamp(2.2rem, 9vw, 3.2rem);
+  }
+  .skills__stats dd {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
   }
   .sgroup,
   .exp__row {
     grid-template-columns: 1fr;
-    gap: 1rem;
-    padding: 1.6rem 0;
+    gap: 0.8rem;
+    padding: 1.4rem 0;
+  }
+  .sgroup__head h3 {
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+  }
+  .sgroup__items {
+    gap: 0.45rem;
+  }
+  .sgroup__items li {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.74rem;
+    gap: 0.5rem;
+  }
+  .exp__period {
+    font-size: 1.35rem;
+  }
+  .exp__row h4 {
+    font-size: clamp(1.4rem, 5.5vw, 2rem);
+  }
+  .exp__row p {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    margin-top: 0.8rem;
   }
   .skills__exp {
-    margin-top: 4rem;
+    margin-top: 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills {
+    padding: 18vw 1rem 18vw;
   }
 }

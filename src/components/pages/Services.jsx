@@ -35,12 +35,10 @@ const services = [
 
 const Services = () => {
   return (
-    <section className="min-h-screen py-28 bg-gradient-to-b from-[#f8fafc] to-[#e2e8f0] dark:from-[#020617] dark:to-[#0f172a]">
-
-      <div className="max-w-7xl mx-auto px-6">
-
+    <section className="min-h-screen pt-24 sm:pt-28 pb-16 bg-gradient-to-b from-[#f8fafc] to-[#e2e8f0] dark:from-[#020617] dark:to-[#0f172a] transition-colors duration-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* 🔥 HEADING */}
-        <h2 className="text-5xl font-bold text-center mb-20 
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 sm:mb-16 
         bg-gradient-to-r from-[#1e293b] via-[#64748b] to-[#94a3b8]
         dark:from-white dark:via-gray-300 dark:to-gray-500
         bg-clip-text text-transparent">
@@ -48,12 +46,11 @@ const Services = () => {
         </h2>
 
         {/* 🔥 GRID */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
           {services.map((s, i) => (
             <div
               key={i}
-              className="group rounded-3xl p-8 
+              className="group rounded-2xl sm:rounded-3xl p-6 sm:p-8 
               bg-white/80 dark:bg-[#0f172a]
               backdrop-blur-xl
               border border-gray-200 dark:border-gray-700
@@ -62,17 +59,17 @@ const Services = () => {
               hover:-translate-y-2"
             >
               {/* Title */}
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-white">
                 {s.title}
               </h3>
 
               {/* Desc */}
-              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 {s.desc}
               </p>
 
               {/* Tech */}
-              <p className="text-sm font-medium text-indigo-500">
+              <p className="text-xs sm:text-sm font-medium text-indigo-500">
                 ⚙ {s.tech}
               </p>
 
@@ -80,9 +77,7 @@ const Services = () => {
               <div className="mt-6 h-[2px] w-0 bg-indigo-500 transition-all duration-300 group-hover:w-full"></div>
             </div>
           ))}
-
         </div>
-
       </div>
     </section>
   );

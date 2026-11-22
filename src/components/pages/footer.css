@@ -204,31 +204,52 @@
   }
   .foot__inner {
     grid-template-columns: 1fr;
-    gap: 3.4rem;
-    padding: 0 1.5rem;
+    gap: 3rem;
+    padding: 0 1.25rem;
   }
   .foot__h2 {
-    font-size: clamp(3rem, 14vw, 5.6rem);
+    font-size: clamp(2.4rem, 11vw, 4.8rem);
   }
   .foot__mail {
-    margin-top: 2rem;
-    font-size: clamp(1.15rem, 5.4vw, 1.6rem);
+    margin-top: 1.8rem;
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
     word-break: break-all;
   }
   .foot__status {
-    margin-top: 1.4rem;
+    margin-top: 1.2rem;
     letter-spacing: 0.14em;
+    font-size: 0.68rem;
   }
   .foot__cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.2rem 1.5rem;
   }
   .foot__word {
-    margin-top: 3rem;
+    margin-top: 2.5rem;
+    font-size: clamp(3.5rem, 20vw, 6.5rem);
   }
   .foot__bar {
     flex-direction: column-reverse;
     align-items: flex-start;
-    padding: 1.4rem 1.5rem 1.8rem;
+    padding: 1.2rem 1.25rem 1.6rem;
+    gap: 0.9rem;
+    font-size: 0.65rem;
+  }
+  .foot__bar button {
+    padding: 0.4rem 0;
+  }
+}
+
+@media (max-width: 440px) {
+  .foot__inner {
+    padding: 0 1rem;
+  }
+  .foot__cols {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+  .foot__bar {
+    padding: 1.2rem 1rem 1.6rem;
   }
 }
 

@@ -2,6 +2,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 @theme {
   --color-primary: rgb(207, 217, 223);
   --color-secondary: rgb(195, 207, 226);

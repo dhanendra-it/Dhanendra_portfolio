@@ -295,7 +295,7 @@
 @media (max-width: 819px) {
   .hero {
     height: auto;
-    min-height: max(100svh, 720px);
+    min-height: max(100svh, 760px);
     background: linear-gradient(180deg, var(--left) 0 53.6%, var(--paper) 53.6%);
   }
   .hero::before {
@@ -327,40 +327,69 @@
     top: 8%;
   }
   .hero__logo {
-    top: 2.4rem;
-    left: 1.5rem;
+    top: 1.1rem;
+    left: 1.25rem;
+    font-size: 1.8rem;
   }
   .hero__nav,
   .hero__label {
     display: none;
   }
   .hero__copy {
-    left: 1.5rem;
-    right: 1.5rem;
-    top: 58%;
+    left: 1.25rem;
+    right: 1.25rem;
+    top: 55%;
   }
   .hero__name {
-    font-size: 0.68rem;
-    letter-spacing: 0.3em;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
   }
   .hero__title {
-    margin-top: 1.6rem;
-    font-size: clamp(2.6rem, 12vw, 4.4rem);
+    margin-top: 1.2rem;
+    font-size: clamp(2.2rem, 10.5vw, 4rem);
+    line-height: 0.95;
+  }
+  .hero__title .line {
+    padding-bottom: 0.12em;
   }
   .hero__sub {
-    margin-top: 1.1rem;
-    font-size: 0.85rem;
-    max-width: none;
+    margin-top: 0.9rem;
+    font-size: clamp(0.8rem, 3.6vw, 0.92rem);
+    line-height: 1.6;
+    max-width: 28rem;
   }
   .hero__cta {
-    right: 1.5rem;
-    bottom: 1.5rem;
+    right: 1.25rem;
+    bottom: 2rem;
     flex-direction: row-reverse;
-    gap: 0.8rem;
+    gap: 0.75rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    padding: 0.4rem;
+    touch-action: manipulation;
   }
   .hero__cta svg {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: max(100svh, 730px);
+  }
+  .hero__copy {
+    left: 1rem;
+    right: 1rem;
+    top: 55%;
+  }
+  .hero__logo {
+    left: 1rem;
+    top: 1.1rem;
+  }
+  .hero__cta {
+    right: 1rem;
+    bottom: 1.5rem;
   }
 }
 
