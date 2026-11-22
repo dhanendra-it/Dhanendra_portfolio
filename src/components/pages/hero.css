@@ -100,9 +100,9 @@
 }
 .hero__photo-fallback {
   position: absolute;
-  bottom: 0;
+  bottom: 8vh;
   left: 37vw;
-  height: 84vh;
+  height: 78vh;
   transform: translateX(-50%);
   width: auto;
 }
