@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import photo from "../../assets/dhruv-neww.png";
 
-const PHOTO_ASPECT = 440 / 541;
+const RING_ROT = new THREE.Euler(-1.0, 0, 0.5);
 const INTRO_DELAY = 2.4; // seconds — waits for the gear loader to finish
 
 /**
@@ -72,8 +72,58 @@ function buildRibbon({ R = 2.2, nu = 360, nv = 40, halfTwists = 2 } = {}) {
   return geo;
 }
 
+/** Where the person really is inside the PNG (transparent margins ignored), as 0..1 fractions. */
+function alphaBounds(img) {
+  const w = 256;
+  const h = Math.max(1, Math.round((w * img.height) / img.width));
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0, w, h);
+  const d = ctx.getImageData(0, 0, w, h).data;
+  const rows = new Uint16Array(h);
+  const cols = new Uint16Array(w);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (d[(y * w + x) * 4 + 3] > 40) {
+        rows[y]++;
+        cols[x]++;
+      }
+    }
+  }
+  const first = (arr) => arr.findIndex((n) => n >= 3);
+  const top = first(rows);
+  if (top < 0) return { top: 0, bottom: 1, left: 0, right: 1 };
+  const bottom = h - 1 - [...rows].reverse().findIndex((n) => n >= 3);
+  const left = first(cols);
+  const right = w - 1 - [...cols].reverse().findIndex((n) => n >= 3);
+  return { top: top / h, bottom: (bottom + 1) / h, left: left / w, right: (right + 1) / w };
+}
+
+/** Lowest point of the ring on screen (NDC y), over a full spin, for a ring centred at (0, posY). */
+function ringLowestNdc(geo, camera, scale, posY) {
+  const pos = geo.attributes.position;
+  const q = new THREE.Quaternion().setFromEuler(RING_ROT);
+  const m = new THREE.Matrix4().compose(new THREE.Vector3(0, 0, 0), q, new THREE.Vector3(scale, scale, scale));
+  m.setPosition(0, posY, 0);
+  const spin = new THREE.Quaternion();
+  const axis = new THREE.Vector3(0, 0, 1);
+  const v = new THREE.Vector3();
+  camera.updateMatrixWorld();
+  let min = Infinity;
+  for (let s = 0; s < 8; s++) {
+    spin.setFromAxisAngle(axis, (s * Math.PI) / 4);
+    for (let i = 0; i < pos.count; i += 7) {
+      v.fromBufferAttribute(pos, i).applyQuaternion(spin).applyMatrix4(m).project(camera);
+      if (v.y < min) min = v.y;
+    }
+  }
+  return min;
+}
+
 function Scene({ reduced }) {
-  const { viewport, size } = useThree();
+  const { viewport, size, camera } = useThree();
   const tex = useTexture(photo, (t) => {
     t.anisotropy = 8;
   });
@@ -84,6 +134,7 @@ function Scene({ reduced }) {
   const photoRef = useRef(null);
   const pointer = useRef({ x: 0, y: 0 });
   const intro = useRef(0);
+  const uFade = useRef({ value: new THREE.Vector2(-1, -0.5) });
 
   useEffect(() => {
     if (reduced) return undefined;
@@ -99,32 +150,78 @@ function Scene({ reduced }) {
   const W = viewport.width;
   const H = viewport.height;
 
-  // person: bottom-anchored on desktop (cropped by the viewport edge), floating on mobile
-  const personH = mobile ? H * 0.46 : H * 0.84;
-  const personW = personH * PHOTO_ASPECT;
-  const cx = mobile ? 0 : -W * 0.13;
-  const cy = mobile ? H / 2 - H * 0.08 - personH / 2 : -H / 2 + personH / 2;
-  const ringY = cy - personH / 2 + personH * 0.47;
-  const ringScale = personH * 0.185;
+  // Layout is derived from where the person actually is inside the PNG, so any photo works:
+  //  desktop – head ~11% from the top, body ends exactly at the ring's lowest edge (soft fade)
+  //  mobile  – person stands on the dark/paper split line
+  const L = useMemo(() => {
+    const img = tex.image;
+    const bb = alphaBounds(img);
+    const aspect = img.width / img.height;
+    const bbH = bb.bottom - bb.top;
+
+    let cx, topY, bottomY, k, ringY;
+    if (mobile) {
+      cx = 0;
+      topY = H * 0.5 - H * 0.08;
+      bottomY = H * 0.5 - H * 0.536;
+      k = (topY - bottomY) * 0.185;
+      ringY = bottomY + (topY - bottomY) * 0.47;
+    } else {
+      cx = -W * 0.13;
+      k = H * 0.155;
+      topY = H * 0.5 - H * 0.11;
+      const target = -H * 0.455; // ring's lowest edge
+      ringY = 0;
+      for (let n = 0; n < 3; n++) ringY += target - (ringLowestNdc(geometry, camera, k, ringY) * H) / 2;
+      bottomY = target + H * 0.01;
+    }
+
+    const visH = topY - bottomY;
+    const planeH = visH / bbH;
+    const planeW = planeH * aspect;
+    return {
+      cx,
+      k,
+      ringY,
+      visH,
+      planeW,
+      planeH,
+      px: cx - ((bb.left + bb.right) / 2 - 0.5) * planeW,
+      py: topY + bb.top * planeH - planeH / 2,
+      // alpha fade (texture v, 0 = bottom of image) over the last part of the body on desktop
+      fade: mobile ? [-1, -0.5] : [1 - bb.bottom, 1 - bb.bottom + bbH * 0.14],
+    };
+  }, [tex, mobile, W, H, geometry, camera]);
+
+  const patchFade = useCallback((shader) => {
+    shader.uniforms.uFade = uFade.current;
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nuniform vec2 uFade;")
+      .replace(
+        "#include <map_fragment>",
+        "#include <map_fragment>\ndiffuseColor.a *= smoothstep(uFade.x, uFade.y, vMapUv.y);"
+      );
+  }, []);
 
   useFrame((state, dt) => {
     const t = state.clock.elapsedTime;
     const { x: px, y: py } = pointer.current;
     intro.current = THREE.MathUtils.damp(intro.current, t > INTRO_DELAY ? 1 : 0, 2.2, dt);
     const p = intro.current;
+    uFade.current.value.set(L.fade[0], L.fade[1]);
 
     if (photoRef.current) {
-      photoRef.current.position.x = THREE.MathUtils.damp(photoRef.current.position.x, cx + px * personW * 0.012, 4, dt);
-      photoRef.current.position.y = cy - (1 - p) * personH * 0.14;
+      photoRef.current.position.x = THREE.MathUtils.damp(photoRef.current.position.x, L.px + px * L.planeW * 0.012, 4, dt);
+      photoRef.current.position.y = L.py - (1 - p) * L.visH * 0.14;
     }
 
     const ring = ringRef.current;
     if (ring) {
-      ring.scale.setScalar(Math.max(ringScale * p, 0.0001));
-      ring.position.x = cx;
-      ring.position.y = ringY + (reduced ? 0 : Math.sin(t * 0.8) * personH * 0.008);
+      ring.scale.setScalar(Math.max(L.k * p, 0.0001));
+      ring.position.x = L.cx;
+      ring.position.y = L.ringY + (reduced ? 0 : Math.sin(t * 0.8) * L.visH * 0.008);
       ring.rotation.y = THREE.MathUtils.damp(ring.rotation.y, px * 0.3, 3, dt);
-      ring.rotation.x = THREE.MathUtils.damp(ring.rotation.x, -1.0 + py * 0.12, 3, dt);
+      ring.rotation.x = THREE.MathUtils.damp(ring.rotation.x, RING_ROT.x + py * 0.12, 3, dt);
     }
     if (spinRef.current && !reduced) spinRef.current.rotation.z += dt * 0.16;
   });
@@ -140,13 +237,14 @@ function Scene({ reduced }) {
         <Lightformer form="rect" intensity={1.5} position={[0, -6, 0]} rotation-x={Math.PI / 2} scale={[24, 24, 1]} />
       </Environment>
 
-      <mesh ref={photoRef} position={[cx, cy, 0]}>
-        <planeGeometry args={[personW, personH]} />
-        <meshBasicMaterial map={tex} alphaTest={0.5} alphaToCoverage toneMapped={false} />
+      {/* transparent plane drawn after the opaque ring: depth-test decides what is in front/behind */}
+      <mesh ref={photoRef} position={[L.px, L.py, 0]}>
+        <planeGeometry args={[L.planeW, L.planeH]} />
+        <meshBasicMaterial map={tex} transparent toneMapped={false} onBeforeCompile={patchFade} />
       </mesh>
 
       {/* the ring passes through the photo plane, so depth decides front/back — no layer hacks */}
-      <group ref={ringRef} rotation={[-1.0, 0, 0.5]} position={[cx, ringY, 0]}>
+      <group ref={ringRef} rotation={[RING_ROT.x, RING_ROT.y, RING_ROT.z]} position={[L.cx, L.ringY, 0]}>
         <group ref={spinRef}>
           <mesh geometry={geometry}>
             <meshPhysicalMaterial
