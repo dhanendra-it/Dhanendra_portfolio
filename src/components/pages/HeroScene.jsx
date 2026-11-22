@@ -169,8 +169,9 @@ function Scene({ reduced }) {
     } else {
       cx = -W * 0.13;
       k = H * 0.155;
-      topY = H * 0.5 - H * 0.11;
-      const target = -H * 0.455; // ring's lowest edge
+      // Slightly smaller and lifted to match the approved editorial portrait framing.
+      topY = H * 0.5 - H * 0.07;
+      const target = -H * 0.37; // ring's lowest edge; lifts the portrait's lower crop
       ringY = 0;
       for (let n = 0; n < 3; n++) ringY += target - (ringLowestNdc(geometry, camera, k, ringY) * H) / 2;
       bottomY = target + H * 0.01;
