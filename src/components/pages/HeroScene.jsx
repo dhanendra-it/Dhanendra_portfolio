@@ -4,7 +4,7 @@ import { Environment, Lightformer, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import photo from "../../assets/dhruv-neww.png";
 
-const RING_ROT = new THREE.Euler(-0.78, 0, 0.9);
+const RING_ROT = new THREE.Euler(-1.08, 0, 0.62);
 const INTRO_DELAY = 2.4; // seconds — waits for the gear loader to finish
 
 /**
@@ -22,8 +22,8 @@ function buildRibbon({ R = 2.2, nu = 360, nv = 40, halfTwists = 2 } = {}) {
     const th = (halfTwists * u) / 2;
     const ct = Math.cos(th);
     const st = Math.sin(th);
-    const a = 0.46 + 0.2 * Math.cos(u); // ribbon half-width, varies around the loop
-    const b = 0.075; // half-thickness
+    const a = 0.34 + 0.12 * Math.cos(u); // slimmer ribbon, closer to the reference
+    const b = 0.052; // thinner chrome edge
 
     const Bx = cu * ct, By = su * ct, Bz = st;
     const Nx = -cu * st, Ny = -su * st, Nz = ct;
@@ -168,14 +168,13 @@ function Scene({ reduced }) {
       ringY = bottomY + (topY - bottomY) * 0.47;
     } else {
       cx = -W * 0.13;
-      k = H * 0.155;
-      // Keep the cutout smaller and higher, leaving more breathing room around the face.
+      k = H * 0.135;
+      // Keep the head near the same top anchor while showing more of the torso.
       topY = H * 0.5 - H * 0.05;
-      bottomY = -H * 0.27;
+      const target = -H * 0.43;
+      bottomY = target + H * 0.015;
 
-      // The chrome ribbon sits lower and on a stronger diagonal, wrapping the waist
-      // rather than cutting across the chest.
-      const target = -H * 0.45;
+      // A narrower, more diagonal chrome loop sits around the lower torso.
       ringY = 0;
       for (let n = 0; n < 3; n++) ringY += target - (ringLowestNdc(geometry, camera, k, ringY) * H) / 2;
     }
