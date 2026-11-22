@@ -292,7 +292,7 @@
 }
 
 /* ───────── tablet / mobile ───────── */
-@media (max-width: 1023px) {
+@media (max-width: 819px) {
   .hero {
     height: auto;
     min-height: max(100svh, 720px);
