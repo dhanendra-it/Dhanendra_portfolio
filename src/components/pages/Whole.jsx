@@ -3,6 +3,7 @@ import Hero from "./Hero";
 import Projects from "./Projects";
 import Certificates from "./Certificates";
 import Skills from "./Skills";
+import Tools from "./Tools";
 import Footer from "./Footer";
 
 const Whole = () => {
@@ -19,6 +20,9 @@ const Whole = () => {
 
       {/* skills + experience + tools */}
       <Skills />
+
+      {/* tools */}
+      <Tools />
 
       {/* footer */}
       <Footer />
