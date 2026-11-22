@@ -146,7 +146,7 @@ function Scene({ reduced }) {
     return () => window.removeEventListener("pointermove", onMove);
   }, [reduced]);
 
-  const mobile = size.width < 1024;
+  const mobile = size.width < 820;
   const W = viewport.width;
   const H = viewport.height;
 
@@ -168,12 +168,12 @@ function Scene({ reduced }) {
       ringY = bottomY + (topY - bottomY) * 0.47;
     } else {
       cx = -W * 0.13;
-      k = H * 0.135;
-      // Keep the head near the same top anchor while showing more of the torso.
-      topY = H * 0.5 - H * 0.05;
+      k = H * 0.125;
+      // Keep the portrait compact, but extend the transparent plane below the visible
+      // aperture so its rectangular edge can never create a horizontal cut.
+      topY = H * 0.42;
       const target = -H * 0.43;
-      // Crop the visible portrait higher: no lower torso should spill below the chrome loop.
-      bottomY = -H * 0.25;
+      bottomY = -H * 0.38;
 
       // A narrower, more diagonal chrome loop sits around the lower torso.
       ringY = 0;
@@ -205,12 +205,13 @@ function Scene({ reduced }) {
         "#include <map_fragment>",
         "#include <map_fragment>\n" +
           "diffuseColor.a *= smoothstep(uFade.x, uFade.y, vMapUv.y);\n" +
-          // Keep the lower torso inside a soft oval aperture; leave the head/shoulders natural.
-          "float bodyX = (vMapUv.x - 0.5) / 0.47;\n" +
-          "float bodyY = (vMapUv.y - 0.30) / 0.33;\n" +
+          // Fade only the lower torso into a broad oval aperture. The image plane
+          // continues below it, so the alpha edge is curved rather than a flat rectangle.
+          "float bodyX = (vMapUv.x - 0.5) / 0.52;\n" +
+          "float bodyY = (vMapUv.y - 0.66) / 0.52;\n" +
           "float bodyEllipse = bodyX * bodyX + bodyY * bodyY;\n" +
-          "float bodyInside = 1.0 - smoothstep(0.92, 1.04, bodyEllipse);\n" +
-          "float lowerBody = 1.0 - smoothstep(0.48, 0.62, vMapUv.y);\n" +
+          "float bodyInside = 1.0 - smoothstep(0.94, 1.06, bodyEllipse);\n" +
+          "float lowerBody = 1.0 - smoothstep(0.68, 0.82, vMapUv.y);\n" +
           "diffuseColor.a *= mix(1.0, bodyInside, lowerBody);"
       );
   }, []);
