@@ -17,7 +17,21 @@ import {
   SiVite,
 } from "react-icons/si";
 import { VscVscode } from "react-icons/vsc";
-import { Compass, Database, PenTool, Plug } from "lucide-react";
+import {
+  BrainCircuit,
+  Code2,
+  Container,
+  Database,
+  GitBranch,
+  Github,
+  Orbit,
+  PenTool,
+  Plug,
+  Smartphone,
+  Sparkles,
+  Terminal,
+} from "lucide-react";
+import { Compass } from "lucide-react";
 
 /**
  * Naya skill/tool add karna ho to bas us group ke `items` me ek line add kar do:
@@ -72,6 +86,16 @@ export const skillGroups = [
       { name: "Postman", icon: SiPostman },
       { name: "Vite", icon: SiVite },
       { name: "MongoDB Compass", icon: Compass },
+      { name: "DeepSeek", icon: BrainCircuit },
+      { name: "Antigravity", icon: Orbit },
+      { name: "Claude Code", icon: Terminal },
+      { name: "Codex", icon: Code2 },
+      { name: "Git", icon: GitBranch },
+      { name: "GitHub", icon: Github },
+      { name: "MariaDB", icon: Database },
+      { name: "Docker", icon: Container },
+      { name: "Gemini", icon: Sparkles },
+      { name: "Android Studio", icon: Smartphone },
     ],
   },
 ];
