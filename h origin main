@@ -1,0 +1,11 @@
+* [33m7c76a0c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/home-3d-redesign[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mhome-3d-redesign[m[33m)[m Align responsive breakpoint with 3D hero layout
+* [33m72f7184[m Center lower portrait mask around torso
+* [33m3528eca[m Fix portrait aperture and prevent flat crop edge
+* [33md79a532[m Mask lower portrait cleanly inside the chrome ring
+* [33mf3d6075[m Contain portrait within chrome orbit and refine hero depth
+* [33ma875517[m Refine hero to match reference: slimmer diagonal ring and full torso framing
+* [33mb9bfc79[m Match reference portrait framing and diagonal chrome ring
+* [33mb3ae5ee[m Match fallback portrait scale and vertical position
+* [33m56d95a1[m Refine hero portrait scale and vertical framing
+*   [33m06f7321[m Merge remote-tracking branch 'origin/main' into home-3d-redesign
+[32m|[m[33m\[m  
