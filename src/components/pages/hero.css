@@ -292,7 +292,7 @@
 }
 
 /* ───────── tablet / mobile ───────── */
-@media (max-width: 819px) {
+@media (max-width: 1099px), (max-aspect-ratio: 7/5) {
   .hero {
     height: auto;
     min-height: max(100svh, 760px);

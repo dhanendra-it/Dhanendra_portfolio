@@ -15,6 +15,15 @@ const Header = ({ toggleDarkMode, darkMode }) => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // same query as hero.css: below this the hero is stacked (dark top), above it split (cream on the right)
+  const [stacked, setStacked] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1099px), (max-aspect-ratio: 7/5)");
+    const on = () => setStacked(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
@@ -80,7 +89,7 @@ const Header = ({ toggleDarkMode, darkMode }) => {
       <nav
         className={`fixed top-0 left-0 h-16 sm:h-20 w-full z-40 flex items-center transition-all duration-300 ${
           isHome && !isScrolled
-            ? "justify-between px-4 sm:px-6 lg:px-10 bg-transparent text-white"
+            ? `justify-between px-4 sm:px-6 lg:px-10 bg-transparent ${stacked ? "text-white" : "text-[#121212] dark:text-[#ece6da]"}`
             : "justify-between px-4 sm:px-6 lg:px-16 backdrop-blur-xl bg-[#e9e4da]/85 dark:bg-[#0c0c0e]/85 border-b border-black/5 dark:border-white/10 text-neutral-900 dark:text-white shadow-xs"
         } ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
       >

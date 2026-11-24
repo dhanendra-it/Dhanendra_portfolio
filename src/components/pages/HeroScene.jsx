@@ -159,7 +159,7 @@ function Scene({ reduced }) {
 
   // shader uniforms (stable objects, updated every frame)
   const uMask = useRef({ value: 0 }); // mobile only: oval mask on the lower torso
-  const uClip = useRef({ value: size.width < 820 ? 0 : 1 }); // desktop: hide the body below the ring's near arc
+  const uClip = useRef({ value: (size.width < 1100 || size.width / size.height < 1.4) ? 0 : 1 }); // desktop: hide the body below the ring's near arc
   const uRes = useRef({ value: new THREE.Vector2(1, 1) });
   const uX = useRef({ value: new THREE.Vector2(-1, 1) });
   const uLow = useRef({ value: new Float32Array(CLIP_N).fill(-2) });
@@ -190,7 +190,7 @@ function Scene({ reduced }) {
     return () => window.removeEventListener("pointermove", onMove);
   }, [reduced]);
 
-  const mobile = size.width < 820;
+  const mobile = size.width < 1100 || size.width / size.height < 1.4;
   const tex = mobile ? texSmall : texTall; // desktop: extended torso (clipped by the ring), mobile: original crop
   const W = viewport.width;
   const H = viewport.height;

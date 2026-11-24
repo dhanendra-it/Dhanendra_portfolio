@@ -2,10 +2,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* `clip` (not `hidden`): hides sideways overflow WITHOUT turning body into a scroll
+   container — `hidden` breaks position: sticky (the pinned Projects section). */
 html,
 body {
-  overflow-x: hidden;
-  max-width: 100vw;
+  overflow-x: clip;
 }
 
 @theme {
