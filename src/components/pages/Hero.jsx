@@ -9,8 +9,13 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowDownRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import Dhanendra from "../../assets/dhruv-neww.png";
 import "./hero.css";
+
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
@@ -46,7 +51,7 @@ const Hero = () => {
   useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0 });
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0, rootMargin: "240px 0px" });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -73,6 +78,76 @@ const Hero = () => {
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, [reduced, mx]);
+
+  // GSAP: only touches elements framer-motion doesn't animate (nav <li>, stage wrapper, copy wrapper, CTA arrow)
+  useEffect(() => {
+    if (reduced) return undefined;
+    const ctx = gsap.context(() => {
+      // nav links slide in one by one after the loader
+      gsap.from(".hero__nav li", {
+        x: -28,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        stagger: 0.1,
+        delay: INTRO + 0.55,
+      });
+
+      // scroll dot pops in (the label is already animated by framer-motion, so GSAP stays off it)
+      gsap.from(".hero__scroll", {
+        scale: 0,
+        opacity: 0,
+        duration: 0.7,
+        ease: "back.out(2)",
+        delay: INTRO + 1.2,
+      });
+
+      // CTA arrow keeps nudging towards the next section
+      gsap.to(".hero__cta svg", {
+        x: 5,
+        y: 5,
+        duration: 0.9,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+        delay: INTRO + 1.6,
+      });
+
+      // scrubbed (fully reversible) scroll motion: portrait drifts up + grows slightly, copy fades out
+      const scrub = { trigger: ref.current, start: "top top", end: "bottom top", scrub: 0.6 };
+      gsap.to(".hero__stage", { yPercent: -7, scale: 1.06, ease: "none", transformOrigin: "50% 40%", scrollTrigger: scrub });
+      gsap.to(".hero__copy", {
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: { ...scrub, start: "25% top", end: "75% top" },
+      });
+
+      // hairline next to the name draws itself in
+      gsap.from(".hero__rule", { scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power3.inOut", delay: INTRO + 0.7 });
+
+      // dashed orbit around the orange disc: endless slow turn, and it widens as you scroll away
+      gsap.to(".hero__orbit", { rotation: 360, duration: 38, ease: "none", repeat: -1 });
+      gsap.to(".hero__orbit i", { scale: 1.6, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      gsap.to(".hero__orbit", {
+        scale: 1.28,
+        ease: "none",
+        scrollTrigger: { trigger: ref.current, start: "top top", end: "bottom top", scrub: 0.6 },
+      });
+
+      // portrait + ring keep a gentle float so the hero never looks frozen (touch screens have no pointer parallax)
+      gsap.to(".hero__stage", { y: -6, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1, delay: INTRO + 1.5 });
+    }, ref);
+    return () => ctx.revert();
+  }, [reduced]);
+
+  // GSAP smooth scroll to the projects section (plain jump when reduced motion is on)
+  const goWork = (e) => {
+    const target = document.querySelector("#project");
+    if (!target) return;
+    e.preventDefault();
+    if (reduced) target.scrollIntoView();
+    else gsap.to(window, { duration: 1.3, ease: "power3.inOut", scrollTo: { y: target, autoKill: true } });
+  };
 
   const par = (style) => (reduced ? undefined : style);
   const fade = (delay, y = 0) => ({
@@ -101,7 +176,9 @@ const Hero = () => {
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1.3, ease: EASE, delay: INTRO }}
-      />
+      >
+        <span className="hero__orbit"><i /></span>
+      </motion.div>
 
       {/* photo + 3D ring */}
       <div className="hero__stage">
@@ -133,14 +210,14 @@ const Hero = () => {
                 {item.to ? (
                   <Link to={item.to} data-active={i === 0 ? "true" : undefined}>{inner}</Link>
                 ) : (
-                  <a href={item.href} data-active={i === 0 ? "true" : undefined}>{inner}</a>
+                  <a href={item.href} onClick={goWork} data-active={i === 0 ? "true" : undefined}>{inner}</a>
                 )}
               </li>
             );
           })}
         </ul>
         <div className="hero__nav-line" style={{ height: "18vh" }} />
-        <a href="#project" className="hero__scroll" aria-label="Scroll to projects" />
+        <a href="#project" onClick={goWork} className="hero__scroll" aria-label="Scroll to projects" />
       </motion.nav>
 
       <motion.div className="hero__label" {...fade(0.5)}>
@@ -149,7 +226,9 @@ const Hero = () => {
 
       {/* copy */}
       <motion.div className="hero__copy" style={par({ y: yCopy })}>
-        <motion.div className="hero__name" {...fade(0.2)}>Dhanendra Choudhary</motion.div>
+        <motion.div className="hero__name" {...fade(0.2)}>
+          Dhanendra Choudhary<i className="hero__rule" />
+        </motion.div>
 
         <h1 className="hero__title">
           {TITLE.map((line, i) => (
@@ -172,7 +251,7 @@ const Hero = () => {
         </motion.p>
       </motion.div>
 
-      <motion.a href="#project" className="hero__cta" {...fade(1)}>
+      <motion.a href="#project" onClick={goWork} className="hero__cta" {...fade(1)}>
         <ArrowDownRight aria-hidden="true" />
         <span>
           Explore<br />my work

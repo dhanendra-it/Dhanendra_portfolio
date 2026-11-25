@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -19,6 +19,8 @@ const CLIP_N = 64; // samples of the ring's lower edge passed to the shader
 const TILT = -1.0; // ring plane tilted about X: its lower half is the half nearer the camera
 const ROLL = 0.5; // on-screen diagonal of the ring (radians, right tip higher)
 const SQUASH = [1.3, 0.84, 0.92]; // desktop scale of the ring along its local x (long axis), y, z
+// Once the intro has played it never replays: a remounted canvas (context lost, scroll back up) starts fully visible.
+let introPlayed = false;
 const RING_MAT = { color: "#d8d9de", metalness: 1, roughness: 0.1, clearcoat: 0.6, clearcoatRoughness: 0.08, envMapIntensity: 1.7 };
 
 /**
@@ -155,7 +157,11 @@ function Scene({ reduced }) {
   const photoRef = useRef(null);
   const matRef = useRef(null);
   const pointer = useRef({ x: 0, y: 0 });
-  const intro = useRef(0);
+  const intro = useRef(introPlayed ? 1 : 0);
+  // R3F resets its own clock to 0 every time frameloop goes never -> always (hero scrolled out and back),
+  // which replayed the intro (photo hidden, ring scaled to 0). So keep our own timer and latch the intro once done.
+  const age = useRef(introPlayed ? INTRO_DELAY + 1 : 0);
+  const introDone = useRef(introPlayed);
 
   // shader uniforms (stable objects, updated every frame)
   const uMask = useRef({ value: 0 }); // mobile only: oval mask on the lower torso
@@ -266,9 +272,14 @@ function Scene({ reduced }) {
   }, []);
 
   useFrame((state, dt) => {
-    const t = state.clock.elapsedTime;
+    age.current += Math.min(dt, 0.1);
+    const t = age.current;
     const { x: px, y: py } = pointer.current;
-    intro.current = THREE.MathUtils.damp(intro.current, t > INTRO_DELAY ? 1 : 0, 2.2, dt);
+    intro.current = THREE.MathUtils.damp(intro.current, introDone.current || t > INTRO_DELAY ? 1 : 0, 2.2, dt);
+    if (intro.current > 0.995) {
+      introDone.current = true;
+      introPlayed = true;
+    }
     const p = intro.current;
 
     uMask.current.value = mobile ? 1 : 0;
@@ -378,8 +389,31 @@ function Scene({ reduced }) {
 }
 
 export default function HeroScene({ active = true, reduced = false }) {
+  // Browsers (mobile above all) drop the WebGL context of an off-screen canvas. Three.js can restore it, but the
+  // one-shot environment map and render state come back blank, so the photo + ring stayed gone after scrolling
+  // back up. A fresh Canvas (new key) always draws correctly, so remount whenever the context is lost.
+  const [epoch, setEpoch] = useState(0);
+  const glRef = useRef(null);
+  const remounts = useRef(0);
+
+  const remount = useCallback(() => {
+    if (remounts.current >= 6) return; // never loop forever on a broken GPU
+    remounts.current += 1;
+    setEpoch((n) => n + 1);
+  }, []);
+
+  // coming back into view: make sure the context survived, otherwise rebuild the canvas
+  useEffect(() => {
+    if (!active) return undefined;
+    const id = requestAnimationFrame(() => {
+      if (glRef.current && glRef.current.getContext().isContextLost()) remount();
+    });
+    return () => cancelAnimationFrame(id);
+  }, [active, remount]);
+
   return (
     <Canvas
+      key={epoch}
       frameloop={active ? "always" : "never"}
       dpr={[1, 2]}
       camera={{ position: [0, 0, 10], fov: 35, near: 0.1, far: 50 }}
@@ -387,6 +421,11 @@ export default function HeroScene({ active = true, reduced = false }) {
       style={{ pointerEvents: "none" }}
       onCreated={({ gl }) => {
         gl.localClippingEnabled = true; // needed for the clipping planes on the two ring halves
+        glRef.current = gl;
+        gl.domElement.addEventListener("webglcontextlost", (e) => {
+          e.preventDefault();
+          setTimeout(remount, 120);
+        });
       }}
     >
       <Scene reduced={reduced} />
