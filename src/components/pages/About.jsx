@@ -1,5 +1,5 @@
 import React from "react";
-import dhruv from "../../assets/dhruv-neww.png";
+import dhruv from "../../assets/dhruv-neww.webp";
 import CV from "../../assets/Dhanendra-CV.pdf";
 
 const About = () => {

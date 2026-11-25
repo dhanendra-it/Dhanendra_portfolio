@@ -2,7 +2,7 @@ import { useRef } from "react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 
-import Dhruv from "../../assets/dhruv-neww.png";
+import Dhruv from "../../assets/dhruv-neww.webp";
 import { BsStars } from "react-icons/bs";
 import { PiStarFourFill } from "react-icons/pi";
 import HeroButton from "./HeroButton";

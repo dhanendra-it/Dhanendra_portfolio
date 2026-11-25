@@ -12,14 +12,15 @@ import { ArrowDownRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import Dhanendra from "../../assets/dhruv-neww.png";
+import Dhanendra from "../../assets/dhruv-neww.webp";
+import { isRevealed, markHeroReady, subscribe, useRevealed } from "../../introGate";
 import "./hero.css";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
-const INTRO = 2.4; // gear loader runs ~2.3s + exit
+const INTRO = 0.15; // seconds after the gear loader starts lifting away (see introGate.js)
 const EASE = [0.16, 1, 0.3, 1];
 
 const NAV = [
@@ -46,12 +47,19 @@ const Hero = () => {
   const ref = useRef(null);
   const reduced = useReducedMotion();
   const [inView, setInView] = useState(true);
+  const revealed = useRevealed(); // flips when the gear loader lifts: entrance animations start from here
 
   // pause the WebGL loop when the hero is scrolled out of view
   useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0, rootMargin: "240px 0px" });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        if (!entry.isIntersecting) markHeroReady(); // page restored further down: nothing to wait for in the hero
+      },
+      { threshold: 0, rootMargin: "240px 0px" }
+    );
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -82,36 +90,34 @@ const Hero = () => {
   // GSAP: only touches elements framer-motion doesn't animate (nav <li>, stage wrapper, copy wrapper, CTA arrow)
   useEffect(() => {
     if (reduced) return undefined;
+    let unsub = null;
     const ctx = gsap.context(() => {
-      // nav links slide in one by one after the loader
-      gsap.from(".hero__nav li", {
-        x: -28,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        stagger: 0.1,
-        delay: INTRO + 0.55,
-      });
+      // entrance tweens: they wait for the gear loader to lift (reveal), so nothing plays behind it
+      const playIntro = () => {
+        // nav links slide in one by one
+        gsap.from(".hero__nav li", { x: -28, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.1, delay: INTRO + 0.55 });
 
-      // scroll dot pops in (the label is already animated by framer-motion, so GSAP stays off it)
-      gsap.from(".hero__scroll", {
-        scale: 0,
-        opacity: 0,
-        duration: 0.7,
-        ease: "back.out(2)",
-        delay: INTRO + 1.2,
-      });
+        // scroll dot pops in (the label is already animated by framer-motion, so GSAP stays off it)
+        gsap.from(".hero__scroll", { scale: 0, opacity: 0, duration: 0.7, ease: "back.out(2)", delay: INTRO + 1.2 });
 
-      // CTA arrow keeps nudging towards the next section
-      gsap.to(".hero__cta svg", {
-        x: 5,
-        y: 5,
-        duration: 0.9,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: INTRO + 1.6,
-      });
+        // CTA arrow keeps nudging towards the next section
+        gsap.to(".hero__cta svg", { x: 5, y: 5, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: -1, delay: INTRO + 1.6 });
+
+        // hairline next to the name draws itself in
+        gsap.from(".hero__rule", { scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power3.inOut", delay: INTRO + 0.7 });
+
+        // portrait + ring keep a gentle float so the hero never looks frozen (touch screens have no pointer parallax)
+        gsap.to(".hero__stage", { y: -6, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1, delay: INTRO + 1.5 });
+      };
+      if (isRevealed()) playIntro();
+      else {
+        unsub = subscribe(() => {
+          if (!isRevealed()) return;
+          unsub?.();
+          unsub = null;
+          ctx.add(playIntro);
+        });
+      }
 
       // scrubbed (fully reversible) scroll motion: portrait drifts up + grows slightly, copy fades out
       const scrub = { trigger: ref.current, start: "top top", end: "bottom top", scrub: 0.6 };
@@ -122,9 +128,6 @@ const Hero = () => {
         scrollTrigger: { ...scrub, start: "25% top", end: "75% top" },
       });
 
-      // hairline next to the name draws itself in
-      gsap.from(".hero__rule", { scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power3.inOut", delay: INTRO + 0.7 });
-
       // dashed orbit around the orange disc: endless slow turn, and it widens as you scroll away
       gsap.to(".hero__orbit", { rotation: 360, duration: 38, ease: "none", repeat: -1 });
       gsap.to(".hero__orbit i", { scale: 1.6, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
@@ -133,11 +136,11 @@ const Hero = () => {
         ease: "none",
         scrollTrigger: { trigger: ref.current, start: "top top", end: "bottom top", scrub: 0.6 },
       });
-
-      // portrait + ring keep a gentle float so the hero never looks frozen (touch screens have no pointer parallax)
-      gsap.to(".hero__stage", { y: -6, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1, delay: INTRO + 1.5 });
     }, ref);
-    return () => ctx.revert();
+    return () => {
+      unsub?.();
+      ctx.revert();
+    };
   }, [reduced]);
 
   // GSAP smooth scroll to the projects section (plain jump when reduced motion is on)
@@ -152,11 +155,14 @@ const Hero = () => {
   const par = (style) => (reduced ? undefined : style);
   const fade = (delay, y = 0) => ({
     initial: { opacity: 0, y },
-    animate: { opacity: 1, y: 0 },
+    animate: revealed ? { opacity: 1, y: 0 } : { opacity: 0, y },
     transition: { duration: 1, ease: EASE, delay: INTRO + delay },
   });
 
+  // shown while the 3D chunk loads (does not count as "ready") ...
   const photoFallback = <img className="hero__photo-fallback" src={Dhanendra} alt="Dhanendra Choudhary" />;
+  // ... and when WebGL fails for good (the photo alone is then the finished hero)
+  const photoFinal = <img className="hero__photo-fallback" src={Dhanendra} alt="Dhanendra Choudhary" onLoad={markHeroReady} onError={markHeroReady} />;
 
   return (
     <section ref={ref} className="hero" aria-label="Introduction">
@@ -174,7 +180,7 @@ const Hero = () => {
         aria-hidden="true"
         style={par({ x: xDisc, y: yDisc })}
         initial={{ scale: 0.6, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        animate={revealed ? { scale: 1, opacity: 1 } : { scale: 0.6, opacity: 0 }}
         transition={{ duration: 1.3, ease: EASE, delay: INTRO }}
       >
         <span className="hero__orbit"><i /></span>
@@ -182,7 +188,7 @@ const Hero = () => {
 
       {/* photo + 3D ring */}
       <div className="hero__stage">
-        <SceneBoundary fallback={photoFallback}>
+        <SceneBoundary fallback={photoFinal}>
           <Suspense fallback={photoFallback}>
             <HeroScene active={inView} reduced={!!reduced} />
           </Suspense>

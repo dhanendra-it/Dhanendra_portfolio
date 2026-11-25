@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import logo from "../../assets/my_logo.png";
+import logo from "../../assets/my_logo.webp";
 import CV from "../../assets/Dhanendra-CV.pdf";
 import { TbBrandLinkedinFilled } from "react-icons/tb";
 import { FaSquareGithub } from "react-icons/fa6";

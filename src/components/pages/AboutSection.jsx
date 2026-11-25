@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Ui from "../../assets/OIP.webp";
-import Fe from "../../assets/f1.jpg";
+import Fe from "../../assets/f1.webp";
 import Fs from "../../assets/f2.webp";
 
 const AboutSection = () => {

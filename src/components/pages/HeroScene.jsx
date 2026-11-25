@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import photo from "../../assets/dhruv-neww.png";
-import photoTall from "../../assets/dhruv-torso.png"; // same cutout, suit continued downward (desktop)
+import { isRevealed, markHeroReady } from "../../introGate";
+import photo from "../../assets/dhruv-neww.webp";
+import photoTall from "../../assets/dhruv-torso.webp"; // same cutout, suit continued downward (desktop)
 
 /*
  * HERO SCENE: portrait + chrome ring
@@ -14,7 +15,7 @@ import photoTall from "../../assets/dhruv-torso.png"; // same cutout, suit conti
  * which sit outside the shoulders. Everything below the near arc is clipped away, so the body
  * looks like it comes out of the ring.
  */
-const INTRO_DELAY = 2.4; // seconds: waits for the gear loader
+const INTRO_DELAY = 0.1; // seconds after the gear loader starts lifting (introGate "revealed")
 const CLIP_N = 64; // samples of the ring's lower edge passed to the shader
 const TILT = -1.0; // ring plane tilted about X: its lower half is the half nearer the camera
 const ROLL = 0.5; // on-screen diagonal of the ring (radians, right tip higher)
@@ -162,6 +163,7 @@ function Scene({ reduced }) {
   // which replayed the intro (photo hidden, ring scaled to 0). So keep our own timer and latch the intro once done.
   const age = useRef(introPlayed ? INTRO_DELAY + 1 : 0);
   const introDone = useRef(introPlayed);
+  const frames = useRef(0);
 
   // shader uniforms (stable objects, updated every frame)
   const uMask = useRef({ value: 0 }); // mobile only: oval mask on the lower torso
@@ -272,10 +274,12 @@ function Scene({ reduced }) {
   }, []);
 
   useFrame((state, dt) => {
+    // textures are decoded + uploaded and a few frames are on screen: tell the gear loader it can lift
+    if (frames.current < 4 && ++frames.current === 4) markHeroReady();
     age.current += Math.min(dt, 0.1);
     const t = age.current;
     const { x: px, y: py } = pointer.current;
-    intro.current = THREE.MathUtils.damp(intro.current, introDone.current || t > INTRO_DELAY ? 1 : 0, 2.2, dt);
+    intro.current = THREE.MathUtils.damp(intro.current, introDone.current || (isRevealed() && t > INTRO_DELAY) ? 1 : 0, 2.2, dt);
     if (intro.current > 0.995) {
       introDone.current = true;
       introPlayed = true;

@@ -1,14 +1,14 @@
 .gear-loader {
-  --gear-drop-duration: 1.18s;
+  /* pendant width (the SVG is 400 x 490); gear centre sits at 47vh, the rope fills the space above it */
+  --gw: clamp(230px, min(46vh, 84vw), 400px);
+  --svg-h: calc(var(--gw) * 1.225);
+  --rope-h: max(40px, calc(47vh - var(--svg-h) * 0.633));
   position: fixed;
   inset: 0;
   z-index: 99999;
   overflow: hidden;
   isolation: isolate;
-  background:
-    radial-gradient(ellipse at 50% 48%, rgba(116, 68, 35, .17), transparent 34%),
-    radial-gradient(ellipse at 50% 100%, rgba(186, 106, 42, .1), transparent 45%),
-    #090909;
+  background: radial-gradient(ellipse at 50% 46%, #1d140d 0%, #0e0a07 46%, #070605 100%);
   color: #d8c6ae;
   pointer-events: all;
 }
@@ -16,150 +16,216 @@
 .gear-loader__grain {
   position: absolute;
   inset: 0;
-  opacity: .12;
+  opacity: 0.13;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
 }
 
-.gear-loader__anchor {
+.gear-loader__vignette {
   position: absolute;
-  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 46%, transparent 32%, rgba(0, 0, 0, 0.62) 100%);
+}
+
+/* warm light behind the pendant */
+.gear-loader__glow {
+  position: absolute;
+  left: 50%;
+  top: 47vh;
+  width: calc(var(--gw) * 1.9);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(238, 146, 52, 0.3) 0%, rgba(160, 84, 26, 0.13) 38%, transparent 68%);
+  opacity: 0;
+  animation: gl-glow-in 1.2s ease 0.9s forwards, gl-glow 4.4s ease-in-out 2.1s infinite alternate;
+}
+
+.gear-loader__dust span {
+  position: absolute;
+  bottom: -12px;
+  border-radius: 50%;
+  background: #ffd391;
+  box-shadow: 0 0 6px 1px rgba(255, 186, 96, 0.75);
+  opacity: 0;
+  animation: gl-dust linear infinite;
+}
+
+/* ---------- pendant ---------- */
+.gear-loader__pendant {
+  position: absolute;
   top: 0;
   left: 50%;
-  width: 2px;
-  height: calc(43vh - 92px);
-  transform: translateX(-50%);
-  transform-origin: top;
-  animation: gear-rope-drop var(--gear-drop-duration) cubic-bezier(.18,.76,.25,1) both;
+  width: var(--gw);
+  margin-left: calc(var(--gw) / -2);
+  animation: gl-drop 1.4s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+  will-change: transform;
 }
 
+.gear-loader__swing {
+  margin-top: -60px; /* rope reaches above the screen so the drop bounce never shows a gap */
+  transform-origin: 50% 0;
+  animation: gl-swing 7.2s ease-in-out 1.35s infinite;
+  will-change: transform;
+}
+
+/* twisted rope */
 .gear-loader__rope {
+  position: relative;
+  display: block;
+  width: calc(var(--gw) * 0.066);
+  height: calc(var(--rope-h) + 66px);
+  margin: 0 auto -6px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(-32deg, #e6bd78 0 4px, #4a2f12 4px 5.5px, #a8783a 5.5px 9px);
+}
+.gear-loader__rope::after {
+  content: "";
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background: repeating-linear-gradient(180deg, #b18b61 0 3px, #4b3929 3px 5px, #d2ad7c 5px 6px);
-  box-shadow: 0 0 8px rgba(211, 143, 72, .24);
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(255, 235, 190, 0.16) 28%, transparent 55%, rgba(0, 0, 0, 0.64));
 }
 
-.gear-loader__hook {
+.gear-loader__body {
+  position: relative;
+  width: var(--gw);
+  height: var(--svg-h);
+}
+
+.gear-loader__layer {
   position: absolute;
-  bottom: -9px;
-  left: -6px;
-  width: 14px;
-  height: 17px;
-  border: 3px solid #b99a75;
-  border-top: 0;
-  border-radius: 0 0 9px 9px;
-  filter: drop-shadow(0 0 5px rgba(221, 150, 74, .3));
-}
-
-.gear-loader__drop {
-  position: absolute;
-  top: calc(43vh - 102px);
-  left: 50%;
-  width: min(220px, 48vw);
-  aspect-ratio: 1;
-  transform: translate(-50%, -115vh);
-  animation: gear-drop var(--gear-drop-duration) cubic-bezier(.18,.76,.25,1) forwards;
-}
-
-.gear-loader__gear {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .72)) drop-shadow(0 0 18px rgba(180, 108, 48, .16));
-  animation: gear-spin 5.5s linear 1.18s infinite;
-  transform-origin: 50% 50%;
-}
-
-.gear-loader__svg {
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
 }
+.gear-loader__body > .gear-loader__layer:first-child {
+  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.7)) drop-shadow(-8px 0 18px rgba(232, 132, 40, 0.28));
+}
 
+/* the turning movement (rim and hanger stay still) */
+.gear-loader__wheel {
+  transform-origin: 0 0; /* wheels are drawn around their own local 0,0 */
+  animation: gl-turn linear infinite;
+}
+.gear-loader__wheel--hub {
+  animation-duration: 26s;
+}
+
+/* ---------- caption + progress ---------- */
 .gear-loader__caption {
   position: absolute;
   left: 50%;
-  bottom: 8.5%;
+  bottom: 14.5%;
   transform: translateX(-50%);
-  color: rgba(218, 195, 164, .64);
-  font: 500 10px/1.2 system-ui, sans-serif;
-  letter-spacing: .34em;
+  color: rgba(224, 203, 170, 0.78);
+  font: 400 12px/1.2 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.4em;
   white-space: nowrap;
-  animation: gear-caption-in .7s ease 1.15s both;
+  animation: gl-caption-in 0.8s ease 1.1s both;
 }
 
-.gear-loader--retract .gear-loader__drop {
-  animation: gear-retract .88s cubic-bezier(.7,0,.84,.18) forwards;
+.gear-loader__bar {
+  position: absolute;
+  left: 50%;
+  bottom: 9.5%;
+  width: min(300px, 58vw);
+  height: 3px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: rgba(255, 226, 180, 0.13);
+  overflow: hidden;
+  animation: gl-caption-in 0.8s ease 1.1s both;
+}
+.gear-loader__bar i {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #b8650f, #f5a83a 62%, #ffd480);
+  box-shadow: 0 0 12px rgba(255, 168, 60, 0.85);
 }
 
-.gear-loader--retract .gear-loader__gear {
-  animation: gear-spin-away .88s ease-in forwards;
+/* ---------- exit: pendant is pulled up its rope while the dark curtain lifts ---------- */
+.gear-loader--retract {
+  animation: gl-curtain 1.05s cubic-bezier(0.77, 0, 0.18, 1) 0.28s forwards;
+  pointer-events: none;
+}
+.gear-loader--retract .gear-loader__pendant {
+  animation: gl-lift 0.95s cubic-bezier(0.55, 0, 0.9, 0.45) forwards;
+}
+.gear-loader--retract .gear-loader__swing {
+  animation-play-state: paused;
+}
+.gear-loader--retract .gear-loader__caption,
+.gear-loader--retract .gear-loader__bar {
+  animation: gl-fade-out 0.3s ease forwards;
 }
 
-.gear-loader--retract .gear-loader__anchor {
-  animation: gear-rope-retract .88s ease-in forwards;
+@keyframes gl-drop {
+  0% { transform: translateY(-112%); }
+  66% { transform: translateY(18px); }
+  80% { transform: translateY(-8px); }
+  91% { transform: translateY(3px); }
+  100% { transform: translateY(0); }
 }
-
-.gear-loader--retract .gear-loader__caption {
-  animation: gear-caption-out .25s ease forwards;
+@keyframes gl-swing {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1.7deg); }
+  75% { transform: rotate(-1.7deg); }
 }
-
-@keyframes gear-drop {
-  0% { transform: translate(-50%, -115vh) rotate(-95deg); }
-  72% { transform: translate(-50%, 14px) rotate(9deg); }
-  86% { transform: translate(-50%, -7px) rotate(-4deg); }
-  100% { transform: translate(-50%, 0) rotate(0); }
-}
-
-@keyframes gear-rope-drop {
-  from { transform: translateX(-50%) scaleY(0); }
-  to { transform: translateX(-50%) scaleY(1); }
-}
-
-@keyframes gear-spin {
+@keyframes gl-turn {
   to { transform: rotate(360deg); }
 }
-
-@keyframes gear-retract {
-  from { transform: translate(-50%, 0) rotate(0); }
-  to { transform: translate(-50%, -120vh) rotate(170deg); }
+@keyframes gl-lift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-116%); }
 }
-
-@keyframes gear-spin-away {
-  to { transform: rotate(95deg) scale(.88); opacity: .35; }
+@keyframes gl-curtain {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
 }
-
-@keyframes gear-rope-retract {
-  to { transform: translateX(-50%) scaleY(0); }
+@keyframes gl-glow-in {
+  to { opacity: 1; }
 }
-
-@keyframes gear-caption-in {
-  from { opacity: 0; letter-spacing: .48em; }
-  to { opacity: 1; letter-spacing: .34em; }
+@keyframes gl-glow {
+  from { transform: translate(-50%, -50%) scale(0.94); }
+  to { transform: translate(-50%, -50%) scale(1.06); }
 }
-
-@keyframes gear-caption-out {
+@keyframes gl-dust {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.75; }
+  85% { opacity: 0.45; }
+  100% { transform: translate(var(--drift, 0), -105vh); opacity: 0; }
+}
+@keyframes gl-caption-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes gl-fade-out {
   to { opacity: 0; }
 }
 
 @media (max-width: 640px) {
-  .gear-loader__drop { width: min(168px, 44vw); top: calc(42vh - 78px); }
-  .gear-loader__anchor { height: calc(42vh - 68px); }
-  .gear-loader__caption { bottom: 12%; font-size: 9px; }
+  .gear-loader__caption { bottom: 15%; font-size: 11px; letter-spacing: 0.36em; }
+  .gear-loader__bar { bottom: 10.5%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gear-loader__drop,
-  .gear-loader__anchor,
-  .gear-loader__gear,
-  .gear-loader__caption {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
+  .gear-loader__swing,
+  .gear-loader__wheel,
+  .gear-loader__dust span,
+  .gear-loader__glow {
+    animation: none;
   }
-  .gear-loader--retract .gear-loader__drop {
-    transform: translate(-50%, -120vh);
-    opacity: 0;
+  .gear-loader__glow { opacity: 1; }
+  .gear-loader__pendant { animation-duration: 0.01ms; }
+  .gear-loader--retract {
+    animation: gl-fade-out 0.4s ease 0.1s forwards;
+  }
+  .gear-loader--retract .gear-loader__pendant {
+    animation: none;
   }
 }

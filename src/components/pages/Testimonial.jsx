@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import TRP from "../../assets/psir.png";
-import FP from "../../assets/faceless.jpg";
+import TRP from "../../assets/psir.webp";
+import FP from "../../assets/faceless.webp";
 
 const testimonials = [
   {
