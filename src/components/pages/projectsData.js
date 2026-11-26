@@ -3,15 +3,28 @@ import Nick from "../../assets/mockup/nick.webp";
 import Unisarthi from "../../assets/mockup/unisarthi.webp";
 import ERP from "../../assets/mockup/bajajErp.webp";
 
+// raw screenshots live in src/assets/screenshots/ and are looked up by file name: screenshot: shot("my-app.png")
+const shots = import.meta.glob("../../assets/screenshots/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" });
+export const shot = (name) => {
+  const hit = Object.entries(shots).find(([path]) => path.endsWith(`/${name}`));
+  if (!hit && import.meta.env.DEV) console.warn(`[projects] screenshot "${name}" not found in src/assets/screenshots/`);
+  return hit ? hit[1] : undefined;
+};
+
 /**
  * Naya project add karna ho to bas ek object niche add kar do — section apne aap
  * lamba ho jayega (scroll length, counter, progress bar sab auto adjust).
+ *
+ * Easiest: raw screenshot ko src/assets/screenshots/ mein daalo, aur
+ *   screenshot: shot("file-name.png")
+ * likho. Laptop mockup code se apne aap ban jayega (no Mockuuups, no background removal).
  *
  * {
  *   title:       "Project name",
  *   category:    "Full Stack · ERP",        // chhota label
  *   year:        "2026",                    // optional
- *   image:       importedImage,             // mockup/screenshot (1536×925 laptop mockups best lagte hain)
+ *   screenshot:  shot("my-app.png"),        // raw screenshot -> laptop mockup auto
+ *   // image:    importedImage,             // (purana tarika) ready-made mockup PNG/WebP, jaisa hai waisa dikhega
  *   description: "1–2 line summary",
  *   tech:        ["React", "Node.js"],
  *   live:        "https://...",             // optional — button tabhi dikhega jab link ho

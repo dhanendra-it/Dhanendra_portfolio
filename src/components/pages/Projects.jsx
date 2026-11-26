@@ -79,17 +79,35 @@ const Outro = () => (
   </div>
 );
 
+/* laptop drawn in CSS: just feed it a raw screenshot */
+const LaptopMockup = ({ src, alt, style }) => (
+  <motion.div className="laptop" style={style}>
+    <div className="laptop__lid">
+      <span className="laptop__cam" aria-hidden="true" />
+      <div className="laptop__screen">
+        <img src={src} alt={alt} loading="lazy" draggable={false} />
+        <span className="laptop__glare" aria-hidden="true" />
+      </div>
+    </div>
+    <div className="laptop__base" aria-hidden="true" />
+  </motion.div>
+);
+
 const CardBody = ({ p, i, total, imgStyle }) => (
   <>
     <div className="pcard__media">
       <span className="pcard__idx" aria-hidden="true">{pad(i + 1)}</span>
-      <motion.img
-        src={p.image}
-        alt={`${p.title} preview`}
-        loading="lazy"
-        draggable={false}
-        style={{ scale: 1.14, ...imgStyle }}
-      />
+      {p.screenshot ? (
+        <LaptopMockup src={p.screenshot} alt={`${p.title} preview`} style={imgStyle} />
+      ) : (
+        <motion.img
+          src={p.image}
+          alt={`${p.title} preview`}
+          loading="lazy"
+          draggable={false}
+          style={{ scale: 1.14, ...imgStyle }}
+        />
+      )}
     </div>
     <div className="pcard__body">
       <div className="pcard__top">
