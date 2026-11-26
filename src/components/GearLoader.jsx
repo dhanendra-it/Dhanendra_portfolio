@@ -6,7 +6,7 @@ import "./GearLoader.css";
  * Steampunk pendant loader (reference: hanging riveted gear with brass movement inside).
  *
  *  - the pendant drops on its rope, settles, then swings gently
- *  - the brass / steel gears inside turn against each other (the riveted rim stays still)
+ *  - the big riveted outer gear turns slowly, and the brass / steel gears inside turn against each other
  *  - the bar is driven by real milestones: page `load`, then the hero portrait + 3D scene having actually drawn
  *  - when both are done the pendant is pulled up on its rope and the dark curtain lifts, revealing a finished hero
  */
@@ -160,30 +160,82 @@ const Defs = () => (
 
 const Rivet = ({ x, y, rot = 0, s = 1 }) => <use href="#gl-rivet-g" transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`} />;
 
-/* everything that stays still: hanger, riveted rim, teeth, recess, wheel shadows */
-const PendantStatic = () => (
+/* soft shadow + amber glow under the pendant; stays put while the rim turns (see .gear-loader__body rule) */
+const PendantShadow = () => (
   <svg className="gear-loader__layer" viewBox={`0 0 ${VB_W} ${VB_H}`} aria-hidden="true">
     <Defs />
+    <circle cx={CX} cy={CY} r="141" fill="#000" />
+  </svg>
+);
 
-    {/* teeth, then the rim disc over their roots */}
-    <use href="#gl-teeth" fill="#6b6253" stroke="url(#gl-edge)" strokeWidth="2" strokeLinejoin="round" />
-    {TEETH_ANGLES.map((a) => (
-      <g key={a} transform={`translate(${CX} ${CY}) rotate(${a})`}>
-        <rect x="-16" y="-164" width="32" height="24" rx="3" fill="rgba(0,0,0,.16)" stroke="rgba(255,238,200,.3)" strokeWidth="1.3" />
+const RIM_SEC = 44; // seconds per full turn of the big outer gear
+const noMotion = () => typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/*
+ * The big outer gear (teeth, riveted rim) turning slowly. The light comes from one fixed corner, so the
+ * highlight / bevel gradients are counter-rotated at exactly the same speed and the metal keeps catching
+ * the light from the top-left while the teeth and rivets travel round. Driven from requestAnimationFrame:
+ * SMIL would not start its timeline until the window `load` event, i.e. not while the loader is needed.
+ */
+const PendantRim = () => {
+  const rim = useRef(null);
+  const grads = useRef([]);
+
+  useEffect(() => {
+    if (noMotion()) return undefined;
+    let raf = 0;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const a = (((now - t0) / (RIM_SEC * 1000)) * 360) % 360;
+      rim.current?.setAttribute("transform", `rotate(${a.toFixed(2)} ${CX} ${CY})`);
+      grads.current.forEach((g) => g?.setAttribute("gradientTransform", `rotate(${(360 - a).toFixed(2)} ${CX} ${CY})`));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <svg className="gear-loader__layer" viewBox={`0 0 ${VB_W} ${VB_H}`} aria-hidden="true">
+      <defs>
+        <linearGradient ref={(el) => { grads.current[0] = el; }} id="gl-light-r" gradientUnits="userSpaceOnUse" x1="60" y1="140" x2="340" y2="480">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset=".5" stopColor="#808080" />
+          <stop offset="1" stopColor="#000000" />
+        </linearGradient>
+        <linearGradient ref={(el) => { grads.current[1] = el; }} id="gl-edge-r" gradientUnits="userSpaceOnUse" x1="60" y1="140" x2="340" y2="480">
+          <stop offset="0" stopColor="#fff3d4" />
+          <stop offset=".5" stopColor="#8a7a63" />
+          <stop offset="1" stopColor="#1a1612" />
+        </linearGradient>
+      </defs>
+      <g ref={rim}>
+      {/* teeth, then the rim disc over their roots */}
+      <use href="#gl-teeth" fill="#6b6253" stroke="url(#gl-edge-r)" strokeWidth="2" strokeLinejoin="round" />
+      {TEETH_ANGLES.map((a) => (
+        <g key={a} transform={`translate(${CX} ${CY}) rotate(${a})`}>
+          <rect x="-16" y="-164" width="32" height="24" rx="3" fill="rgba(0,0,0,.16)" stroke="rgba(255,238,200,.3)" strokeWidth="1.3" />
+        </g>
+      ))}
+      <circle cx={CX} cy={CY} r="141" fill="#6b6253" stroke="url(#gl-edge-r)" strokeWidth="2.4" />
+      <circle cx={CX} cy={CY} r="137" fill="none" stroke="#000" strokeOpacity=".4" strokeWidth="1.2" />
+      <circle cx={CX} cy={CY} r="134" fill="none" stroke="rgba(255,240,210,.16)" strokeWidth="1.4" />
+      <circle cx={CX} cy={CY} r="118" fill="none" stroke="#000" strokeOpacity=".35" strokeWidth="1.4" />
+      {/* one light source: shade + highlight over teeth and rim together */}
+      <use href="#gl-silhouette" fill="url(#gl-light-r)" opacity=".9" style={{ mixBlendMode: "overlay" }} />
+
+      {RIVET_ANGLES.map((a) => {
+        const [x, y] = polar(126, a);
+        return <Rivet key={a} x={x} y={y} rot={a * 3} />;
+      })}
       </g>
-    ))}
-    <circle cx={CX} cy={CY} r="141" fill="#6b6253" stroke="url(#gl-edge)" strokeWidth="2.4" />
-    <circle cx={CX} cy={CY} r="137" fill="none" stroke="#000" strokeOpacity=".4" strokeWidth="1.2" />
-    <circle cx={CX} cy={CY} r="134" fill="none" stroke="rgba(255,240,210,.16)" strokeWidth="1.4" />
-    <circle cx={CX} cy={CY} r="118" fill="none" stroke="#000" strokeOpacity=".35" strokeWidth="1.4" />
-    {/* one light source: shade + highlight over teeth and rim together */}
-    <use href="#gl-silhouette" fill="url(#gl-light)" opacity=".9" style={{ mixBlendMode: "overlay" }} />
+    </svg>
+  );
+};
 
-    {RIVET_ANGLES.map((a) => {
-      const [x, y] = polar(126, a);
-      return <Rivet key={a} x={x} y={y} rot={a * 3} />;
-    })}
-
+/* what stays still: recess, wheel shadows, hanger */
+const PendantStatic = () => (
+  <svg className="gear-loader__layer" viewBox={`0 0 ${VB_W} ${VB_H}`} aria-hidden="true">
     {/* recess holding the movement */}
     <circle cx={CX} cy={CY} r="112" fill="url(#gl-recess)" />
     <circle cx={CX} cy={CY} r="111" fill="none" stroke="url(#gl-edge-rev)" strokeWidth="4" />
@@ -386,6 +438,8 @@ export default function GearLoader() {
         <div className="gear-loader__swing">
           <span className="gear-loader__rope" />
           <div className="gear-loader__body">
+            <PendantShadow />
+            <PendantRim />
             <PendantStatic />
             <PendantMovement />
           </div>
