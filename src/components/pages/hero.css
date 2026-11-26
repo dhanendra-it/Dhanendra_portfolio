@@ -66,8 +66,10 @@
   color: #e9e4da;
 }
 .hero__letter--c {
-  top: 58vh; /* was 76vh: most of the C sat below the screen */
-  left: 45vw; /* was 38vw: its left edge sat on the dark panel (40vw), where black-on-black hid it */
+  /* the whole C (cap height ~0.7em) must sit inside the screen: glyph spans ~54vh -> ~96vh */
+  font-size: 60vh;
+  top: 53vh;
+  left: 45vw; /* its left edge must stay clear of the dark panel (40vw), where black-on-black hid it */
   color: #121212;
 }
 .dark .hero__letter--c {

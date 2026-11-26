@@ -168,7 +168,7 @@ const PendantShadow = () => (
   </svg>
 );
 
-const RIM_SEC = 44; // seconds per full turn of the big outer gear
+const RIM_SEC = 12; // seconds per full turn of the big outer gear
 const noMotion = () => typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /*
